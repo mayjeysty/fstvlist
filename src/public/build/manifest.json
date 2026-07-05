@@ -1,18 +1,24 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-DN1ZmMYs.css",
+    "file": "assets/app-DYeyJNnc.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/css/filament/admin/theme.css": {
-    "file": "assets/theme-CLHBxoRM.css",
+    "file": "assets/theme-B1QSvdup.css",
     "src": "resources/css/filament/admin/theme.css",
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-eMHK6VFw.js",
+    "file": "assets/app-DsbP9Jus.js",
     "name": "app",
     "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/qr-scanner.js": {
+    "file": "assets/qr-scanner-CtyaTYD0.js",
+    "name": "qr-scanner",
+    "src": "resources/js/qr-scanner.js",
     "isEntry": true
   }
 }

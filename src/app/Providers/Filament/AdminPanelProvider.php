@@ -52,8 +52,9 @@ class AdminPanelProvider extends PanelProvider
                 \Awcodes\Overlook\Widgets\OverlookWidget::class,
             ])
             ->navigationGroups([
-                NavigationGroup::make()
-                    ->label('Administration'),
+                NavigationGroup::make()->label('Event Management')->icon('heroicon-o-calendar-days'),
+                NavigationGroup::make()->label('Ticketing')->icon('heroicon-o-ticket'),
+                NavigationGroup::make()->label('Administration')->icon('heroicon-o-cog-6-tooth'),
             ])
             ->userMenuItems([
                 'profile' => MenuItem::make()
@@ -96,6 +97,10 @@ class AdminPanelProvider extends PanelProvider
                 \Awcodes\Overlook\OverlookPlugin::make()
                     ->includes([
                         \App\Filament\Admin\Resources\UserResource::class,
+                        \App\Filament\Admin\Resources\EventResource::class,
+                        \App\Filament\Admin\Resources\OrderResource::class,
+                        \App\Filament\Admin\Resources\TicketResource::class,
+                        \App\Filament\Admin\Resources\VenueResource::class,
                     ]),
                 \Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin::make()
                     ->slug('my-profile')

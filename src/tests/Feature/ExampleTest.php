@@ -1,7 +1,7 @@
 <?php
 
-test('the application returns a successful response', function () {
-    $response = $this->get('/');
-
-    $response->assertStatus(200);
+test('home page loads successfully', function () {
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('Jelajahi Konser');
 });

@@ -13,6 +13,16 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
+  redis:
+    image: redis:7-alpine
+    container_name: ${COMPOSE_PROJECT_NAME}_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
   nginx:
     build:
       context: ./nginx
@@ -44,3 +54,6 @@ services:
     volumes:
       - ./db/conf.d:/etc/mysql/conf.d
       - ./db/data:/var/lib/mysql
+
+volumes:
+  redis-data:
