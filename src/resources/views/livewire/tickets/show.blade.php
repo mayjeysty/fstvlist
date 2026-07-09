@@ -34,18 +34,14 @@
         <div class="ds-absolute" style="inset:0;{{ $order->event->banner ? 'background:linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 100%);' : 'background:radial-gradient(ellipse at 50% 0%, rgba(232,255,0,0.12) 0%, transparent 60%);' }}pointer-events:none;"></div>
         <div class="ds-absolute" style="top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle, rgba(232,255,0,0.06) 0%, transparent 60%);pointer-events:none;"></div>
         <div class="ds-relative" style="z-index:1;">
-            <h1 style="font-family:'Fraunces',Georgia,serif;font-size:1.75rem;font-weight:900;color:#fff;line-height:1.15;margin-bottom:var(--space-2);">
+            <h1 style="font-family:'ClashDisplay-Semibold','Fraunces',Georgia,serif;font-size:1.75rem;font-weight:650;color:#fff;line-height:1.15;margin-bottom:var(--space-2);">
                 Tiket kamu sudah <span style="color:#E8FF00;">siap!</span>
             </h1>
-            <p class="ds-text-xs" style="color:rgba(255,255,255,0.5);max-width:420px;line-height:1.5;">Pesanan dikonfirmasi. QR Code tiket akan dikirim ke emailmu — tunjukkan saat masuk venue.</p>
-            <div class="ds-inline-flex ds-items-center ds-gap-2 ds-mt-3" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-pill);padding:var(--space-1) var(--space-3) var(--space-1) var(--space-2);">
-                <span class="ds-dot-success" style="width:6px;height:6px;border-radius:50%;animation:pulse 1s infinite;"></span>
-                <span style="font-size:9px;color:rgba(255,255,255,0.5);letter-spacing:0.02em;">E-tiket (PDF + QR Code) dikirim ke {{ $order->user->email }}</span>
-            </div>
+            <p class="ds-text-xs" style="color:rgba(255,255,255,0.5);max-width:420px;line-height:1.5;">QR code tiket sudah dikirim ke <strong style="color:rgba(255,255,255,0.7);">{{ $order->user->email }}</strong> — tunjukkan saat masuk venue.</p>
         </div>
     </div>
 
-    {{-- MAIN LAYOUT --}}
+    {{-- MAIN LAYOUT: Ticket Card (left) + Sidebar (right) --}}
     <div class="ds-grid ds-grid-2" style="gap:var(--space-5);align-items:start;">
 
         {{-- LEFT: Ticket Card --}}
@@ -53,7 +49,7 @@
             <div>
                 {{-- Top (black) --}}
                 <div style="background:#000;color:#fff;padding:var(--space-5);border-radius:var(--radius-lg) var(--radius-lg) 0 0;">
-                    <h2 style="font-family:'Fraunces',Georgia,serif;font-size:1.25rem;font-weight:900;margin-bottom:var(--space-3);">{{ $order->event->name }}</h2>
+                    <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',Georgia,serif;font-size:1.25rem;font-weight:650;margin-bottom:var(--space-3);">{{ $order->event->name }}</h2>
                     <div class="ds-grid ds-grid-2" style="gap:var(--space-2) var(--space-4);font-size:10px;">
                         <div>
                             <span class="ds-uppercase ds-block" style="font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:0.06em;margin-bottom:1px;">Tanggal</span>
@@ -82,7 +78,7 @@
                 <div class="ds-flex ds-items-center" style="background:#000;padding:0 var(--space-5) var(--space-3) var(--space-5);gap:var(--space-3);">
                     <span class="ds-badge ds-badge--brand" style="font-size:9px;letter-spacing:0.15em;padding:2px 10px;border-radius:2px;">{{ $ticket->section->name ?? $order->section->name }}</span>
                     <span style="font-size:9px;color:rgba(255,255,255,0.4);">{{ $order->qty }} tiket dipesan</span>
-                    <span class="ds-ml-auto" style="font-size:9px;color:rgba(255,255,255,0.25);">Penyelenggara: {{ $order->event->name }}</span>
+                    <span class="ds-ml-auto" style="font-size:9px;color:rgba(255,255,255,0.25);">Penyelenggara: {{ $order->event->venue->name }}</span>
                 </div>
 
                 {{-- Perforation --}}
@@ -169,7 +165,7 @@
                 <p class="ds-card-summary__title">Ringkasan pesanan</p>
                 <div class="ds-mb-3">
                     <p class="ds-font-semibold ds-text-small">{{ $order->event->name }}</p>
-                    <p class="ds-text-xs ds-text-tertiary">{{ $order->event->venue->name }}, {{ $order->event->venue->city ?? $order->event->venue->address }}</p>
+                    <p class="ds-text-xs ds-text-tertiary">{{ $order->event->venue->name }}, {{ $order->event->venue->city ?? '' }}</p>
                     <p class="ds-text-xs ds-text-tertiary">{{ $order->event->start_time->isoFormat('dddd, D MMM YYYY') }} · {{ $order->event->start_time->format('H.i') }} {{ $tz }}</p>
                 </div>
                 <div class="ds-flex-col" style="display:flex;gap:var(--space-2);font-size:var(--text-small);">
@@ -203,27 +199,16 @@
                 <button onclick="navigator.clipboard.writeText('{{ $orderCode }}');this.textContent='Tersalin!';setTimeout(()=>this.textContent='Salin',2000)" class="ds-btn ds-btn--sm ds-btn--secondary" style="flex-shrink:0;white-space:nowrap;">Salin</button>
             </div>
 
-            {{-- E-tiket status --}}
-            <div class="ds-card-summary ds-card-summary--elevated ds-mb-4" style="padding:var(--space-4) var(--space-5);">
-                <div class="ds-flex ds-items-center ds-gap-2 ds-mb-1">
-                    <span class="ds-badge-dot ds-badge-dot--success" style="animation:blink 1s infinite;"></span>
-                    <p class="ds-text-success ds-font-bold" style="font-size:10px;letter-spacing:0.05em;">E-tiket sedang dikirim</p>
-                </div>
-                <p class="ds-text-xs ds-text-tertiary" style="line-height:1.4;">PDF + QR Code dikirim ke {{ $order->user->email }}. Cek inbox dalam 1–2 menit. Jika tidak ada, cek folder Spam.</p>
-            </div>
-
             {{-- Action buttons --}}
-            <div class="ds-flex ds-flex-col ds-gap-2 ds-mb-4">
+            <div class="ds-flex ds-flex-col ds-gap-2 ds-mb-6">
                 <button wire:click="download" class="ds-btn ds-btn--primary ds-btn--block">
                     <svg class="ds-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     Unduh E-Tiket PDF
                 </button>
-                <a href="{{ route('orders.index') }}" class="ds-btn ds-btn--secondary ds-btn--block">Lihat riwayat transaksi</a>
-                <a href="{{ route('home') }}" class="ds-btn ds-btn--secondary ds-btn--block">Kembali ke beranda</a>
             </div>
 
             {{-- 3-step guide --}}
-            <div class="ds-card-summary">
+            <div class="ds-card-summary ds-mb-4">
                 <p class="ds-card-summary__title">Yang perlu kamu lakukan</p>
                 <div class="ds-flex ds-flex-col ds-gap-3">
                     <div class="ds-flex" style="align-items:flex-start;gap:var(--space-3);">
@@ -251,5 +236,97 @@
             </div>
         </div>
     </div>
+
+    {{-- ================================================================
+         EVENT INFO SECTION
+         ================================================================ --}}
+    <div style="margin-top:var(--space-10);padding-top:var(--space-8);border-top:1px solid var(--color-border);">
+        <p class="ds-uppercase ds-font-bold" style="font-size:10px;color:var(--color-text-tertiary);letter-spacing:0.12em;margin-bottom:var(--space-5);">Detail Acara</p>
+
+        <div class="ds-grid" style="grid-template-columns:1fr 1fr;gap:var(--space-5);align-items:start;">
+
+            {{-- Left: Venue + Location --}}
+            <div>
+                <div style="background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5);margin-bottom:var(--space-4);">
+                    <div class="ds-flex ds-items-center ds-gap-2 ds-mb-4">
+                        <div class="ds-flex ds-flex-center" style="width:36px;height:36px;border-radius:8px;background:#000;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8FF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </div>
+                        <div>
+                            <p class="ds-font-bold ds-text-small">{{ $order->event->venue->name }}</p>
+                            <p class="ds-text-xs ds-text-tertiary">{{ $order->event->venue->city ?? '' }}</p>
+                        </div>
+                    </div>
+                    <p class="ds-text-xs ds-text-tertiary ds-mb-1" style="line-height:1.5;">{{ $order->event->venue->address }}</p>
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($order->event->venue->address . ', ' . ($order->event->venue->city ?? '')) }}"
+                       target="_blank" rel="noopener noreferrer"
+                       class="ds-inline-flex ds-items-center ds-gap-1.5 ds-no-underline ds-mt-3" style="font-size:10px;color:var(--color-text-primary);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Buka di Google Maps
+                    </a>
+                </div>
+
+                {{-- Organizer --}}
+                <div style="background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5);">
+                    <p class="ds-uppercase ds-font-bold" style="font-size:9px;color:var(--color-text-tertiary);letter-spacing:0.1em;margin-bottom:var(--space-3);">Penyelenggara</p>
+                    <div class="ds-flex ds-items-center ds-gap-3">
+                        <div class="ds-flex ds-flex-center" style="width:36px;height:36px;border-radius:50%;background:#000;flex-shrink:0;">
+                            <span style="font-family:'ClashDisplay-Semibold','Fraunces',Georgia,serif;font-size:1rem;color:#E8FF00;font-weight:650;">{{ strtoupper(mb_substr($order->event->venue->name, 0, 1)) }}</span>
+                        </div>
+                        <div>
+                            <p class="ds-font-bold ds-text-small">{{ $order->event->venue->name }}</p>
+                            <p class="ds-text-xs ds-text-tertiary">Penyelenggara event</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Right: Event Timeline + Description --}}
+            <div>
+                {{-- Timeline --}}
+                <div style="background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5);margin-bottom:var(--space-4);">
+                    <p class="ds-uppercase ds-font-bold" style="font-size:9px;color:var(--color-text-tertiary);letter-spacing:0.1em;margin-bottom:var(--space-4);">Jadwal Acara</p>
+                    <div class="ds-flex ds-flex-col" style="gap:var(--space-3);">
+                        <div class="ds-flex" style="gap:var(--space-3);align-items:flex-start;">
+                            <div class="ds-flex ds-flex-center" style="width:32px;height:32px;border-radius:8px;background:var(--color-bg-primary);flex-shrink:0;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            </div>
+                            <div>
+                                <p class="ds-text-xs ds-font-bold">{{ $order->event->start_time->isoFormat('dddd, D MMMM YYYY') }}</p>
+                                <p class="ds-text-xs ds-text-tertiary">Tanggal acara</p>
+                            </div>
+                        </div>
+                        <div class="ds-flex" style="gap:var(--space-3);align-items:flex-start;">
+                            <div class="ds-flex ds-flex-center" style="width:32px;height:32px;border-radius:8px;background:rgba(232,255,0,0.12);flex-shrink:0;">
+                                <span style="font-size:10px;font-weight:700;color:#000;">{{ $order->event->start_time->copy()->subHours($doorsOpenHours)->format('H.i') }}</span>
+                            </div>
+                            <div>
+                                <p class="ds-text-xs ds-font-bold">Gate Open — {{ $order->event->start_time->copy()->subHours($doorsOpenHours)->format('H.i') }} {{ $tz }}</p>
+                                <p class="ds-text-xs ds-text-tertiary">Pintu venue dibuka</p>
+                            </div>
+                        </div>
+                        <div class="ds-flex" style="gap:var(--space-3);align-items:flex-start;">
+                            <div class="ds-flex ds-flex-center" style="width:32px;height:32px;border-radius:8px;background:#000;flex-shrink:0;">
+                                <span style="font-size:10px;font-weight:700;color:#E8FF00;">{{ $order->event->start_time->format('H.i') }}</span>
+                            </div>
+                            <div>
+                                <p class="ds-text-xs ds-font-bold">Show Time — {{ $order->event->start_time->format('H.i') }} {{ $tz }}</p>
+                                <p class="ds-text-xs ds-text-tertiary">Acara dimulai</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Description --}}
+                @if($order->event->description)
+                <div style="background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5);">
+                    <p class="ds-uppercase ds-font-bold" style="font-size:9px;color:var(--color-text-tertiary);letter-spacing:0.1em;margin-bottom:var(--space-3);">Tentang Acara</p>
+                    <p class="ds-text-xs ds-text-tertiary" style="line-height:1.7;">{{ $order->event->description }}</p>
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
+
     <style>@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } } @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.3; } }</style>
 </div>

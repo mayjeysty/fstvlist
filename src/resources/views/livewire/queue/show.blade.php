@@ -3,7 +3,7 @@
 
         {{-- Logo --}}
         <div class="text-center mb-5">
-            <span class="font-display text-lg font-black text-white">FSTV<span class="text-accent">●</span>LIST</span>
+            <span class="font-display text-lg font-semibold text-white">FSTV<span class="text-accent">●</span>LIST</span>
         </div>
 
         @if($queueEntry->status === \App\Models\Queue::STATUS_EXPIRED)
@@ -11,7 +11,7 @@
                 <div class="w-16 h-16 bg-error/20 rounded-full flex items-center justify-center mx-auto mb-4">
                     <svg class="w-8 h-8 text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
-                <p class="font-display text-lg font-bold text-error">Antrian Kadaluarsa</p>
+                <p class="font-display text-lg font-semibold text-error">Antrian Kadaluarsa</p>
                 <p class="font-body text-sm text-muted mt-2">Waktu antrian Anda telah habis.</p>
                 <a href="{{ route('events.show', $event) }}" class="inline-block mt-4 font-body text-sm text-accent hover:text-accent-hover">← Kembali ke Event</a>
             </div>
@@ -33,7 +33,7 @@
                 <p class="font-body text-[11px] font-semibold text-muted uppercase tracking-[0.08em] text-center">Ruang Tunggu</p>
 
                 {{-- Judul Utama --}}
-                <h2 class="font-display text-[28px] font-bold uppercase leading-[1.05] tracking-[-0.01em] text-ink text-center mt-2">
+                <h2 class="font-display text-[28px] font-semibold uppercase leading-[1.05] tracking-[-0.01em] text-ink text-center mt-2">
                     HAMPIR<br>GILIRANMU!
                 </h2>
 
@@ -43,7 +43,7 @@
                 {{-- Kotak Nomor Antrean --}}
                 <div class="bg-ink rounded-2xl p-5 mt-6 text-center">
                     <p class="font-body text-[10px] text-muted uppercase tracking-[0.05em]">Nomor antreanmu</p>
-                    <p class="font-display text-[48px] font-black leading-none text-accent mt-1">{{ number_format($queueEntry->queue_number, 0, '', '.') }}</p>
+                    <p class="font-display text-[48px] font-semibold leading-none text-accent mt-1">{{ number_format($queueEntry->queue_number, 0, '', '.') }}</p>
                     <p class="font-body text-[11px] text-mid-gray mt-1">dari {{ number_format($totalWaiting ?? 6200) }} pengguna aktif</p>
                 </div>
 
@@ -62,11 +62,11 @@
                 {{-- Dua Stat Kotak --}}
                 <div class="grid grid-cols-2 gap-2.5 mt-3">
                     <div class="bg-white border border-border-light rounded-xl p-3 text-center">
-                        <p class="font-display text-[22px] font-bold text-ink leading-none">{{ number_format($waitingAhead) }}</p>
+                        <p class="font-display text-[22px] font-semibold text-ink leading-none">{{ number_format($waitingAhead) }}</p>
                         <p class="font-body text-[10px] text-muted uppercase tracking-[0.05em] mt-1">Di depanmu</p>
                     </div>
                     <div class="bg-white border border-border-light rounded-xl p-3 text-center">
-                        <p class="font-display text-[22px] font-bold text-ink leading-none">{{ number_format(($totalWaiting ?? 6200) - $queueEntry->queue_number - $waitingAhead) }}</p>
+                        <p class="font-display text-[22px] font-semibold text-ink leading-none">{{ number_format(($totalWaiting ?? 6200) - $queueEntry->queue_number - $waitingAhead) }}</p>
                         <p class="font-body text-[10px] text-muted uppercase tracking-[0.05em] mt-1">Sudah masuk</p>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                 {{-- Estimasi Waktu --}}
                 <div class="bg-accent rounded-xl p-3 flex justify-between items-center mt-3">
                     <span class="font-body text-[12px] font-semibold text-ink">Estimasi giliran</span>
-                    <span class="font-display text-[22px] font-bold text-ink leading-none">~{{ max(1, ceil($waitingAhead / 100)) }} mnt</span>
+                    <span class="font-display text-[22px] font-semibold text-ink leading-none">~{{ max(1, ceil($waitingAhead / 100)) }} mnt</span>
                 </div>
             </div>
 
@@ -87,7 +87,7 @@
                     $secs = $secondsLeft % 60;
                     $urgent = $secondsLeft < 60;
                 @endphp
-                <span class="font-display text-[20px] font-bold leading-none {{ $urgent ? 'text-coral' : 'text-accent' }}" style="font-variant-numeric:tabular-nums">@if($secondsLeft > 0){{ sprintf('%02d:%02d', $mins, $secs) }}@else 00:00 @endif</span>
+                <span class="font-display text-[20px] font-semibold leading-none {{ $urgent ? 'text-coral' : 'text-accent' }}" style="font-variant-numeric:tabular-nums">@if($secondsLeft > 0){{ sprintf('%02d:%02d', $mins, $secs) }}@else 00:00 @endif</span>
             </div>
 
             {{-- Auto-refresh hint --}}
@@ -98,7 +98,7 @@
                 <div class="w-16 h-16 bg-success/20 rounded-full flex items-center justify-center mx-auto mb-4">
                     <svg class="w-8 h-8 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                 </div>
-                <p class="font-display text-lg font-bold text-success">Transaksi Selesai</p>
+                <p class="font-display text-lg font-semibold text-success">Transaksi Selesai</p>
                 <p class="font-body text-sm text-muted mt-2">Tiket Anda sudah siap.</p>
                 <a href="{{ route('tickets.index') }}" class="inline-block mt-4 font-body text-sm text-accent hover:text-accent-hover">Lihat Tiket Saya →</a>
             </div>

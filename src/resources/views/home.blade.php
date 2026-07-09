@@ -10,7 +10,7 @@
         <span class="font-body text-[11px] font-semibold text-accent uppercase tracking-[0.12em] block mb-4">
             Platform tiket konser #1 Indonesia
         </span>
-        <h1 class="font-display text-[clamp(48px,8vw,96px)] font-black uppercase leading-[0.92] tracking-tight">
+        <h1 class="font-display text-[clamp(48px,8vw,96px)] font-semibold uppercase leading-[0.92] tracking-tight">
             RASAKAN<br>KONSER<br>LANGSUNG<span class="text-accent">.</span>
         </h1>
         <p class="font-body text-sm text-white/50 max-w-[300px] leading-relaxed mt-4">
@@ -69,7 +69,7 @@
     <div class="max-w-7xl mx-auto px-4">
         <div class="flex items-end justify-between mb-10">
             <div>
-                <h2 class="font-display text-[clamp(28px,4vw,36px)] font-bold uppercase text-ink leading-[1.05]">Konser<br>Mendatang</h2>
+                <h2 class="font-display text-[clamp(28px,4vw,36px)] font-semibold uppercase text-ink leading-[1.05]">Konser<br>Mendatang</h2>
             </div>
             <a href="{{ route('events.index') }}" class="font-body text-xs font-semibold text-ink uppercase border-b-2 border-ink pb-1 hover:text-accent hover:border-accent transition-colors">
                 Lihat Semua →
@@ -86,30 +86,43 @@
                     ];
                 @endphp
                 <a href="{{ route('events.show', $event) }}" class="group block">
-                    <div class="aspect-[4/3] rounded-t-xl overflow-hidden bg-gradient-to-br {{ $gradients[$i % 3] }} flex items-center justify-center">
+                    <div class="aspect-[4/3] rounded-t-xl overflow-hidden bg-gradient-to-br {{ $gradients[$i % 3] }} flex items-center justify-center relative">
                         @if($event->banner)
                             <img src="{{ Storage::url($event->banner) }}" class="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-300">
                         @else
-                            <span class="font-display text-5xl font-black text-white/20 uppercase">{{ substr($event->name, 0, 1) }}</span>
+                            <svg class="w-14 h-14 text-white/20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 18V5l12-2v13"/>
+                                <circle cx="6" cy="18" r="3"/>
+                                <circle cx="18" cy="16" r="3"/>
+                            </svg>
                         @endif
                     </div>
                     <div class="bg-ink text-white rounded-b-xl px-4 py-3.5">
-                        <h3 class="font-display font-bold text-base uppercase leading-tight">{{ $event->name }}</h3>
-                        <p class="font-body text-[11px] text-muted mt-1">{{ $event->venue->name }} · {{ $event->venue->city ?? '' }} · {{ $event->start_time->format('d M Y') }}</p>
+                        <h3 class="font-display font-semibold text-base uppercase leading-tight">{{ $event->name }}</h3>
+                        <p class="font-body text-[11px] text-muted mt-1">{{ $event->venue->name }} · {{ $event->venue->city ?? '' }} · {{ $event->start_time->format('d M Y') }} · {{ $event->start_time->format('H:i') }}</p>
                         <div class="flex items-center justify-between mt-2">
                             @php
                                 $minPrice = $event->eventSections->isNotEmpty()
                                     ? $event->eventSections->min('price')
                                     : $event->venue->sections->min('price');
+                                $totalRemaining = $event->eventSections->sum('remaining');
                             @endphp
-                            <span class="font-body text-xs font-bold text-accent">IDR {{ number_format($minPrice ?? 0, 0, ',', '.') }}</span>
-                            <span class="font-body text-[10px] font-semibold uppercase bg-accent text-ink rounded-pill px-2.5 py-1">Segera</span>
+                            <div>
+                                <div class="font-body text-[10px] text-muted leading-tight">Mulai dari</div>
+                                <div class="font-body text-xs font-bold text-accent leading-tight">Rp{{ number_format($minPrice ?? 0, 0, ',', '.') }}</div>
+                            </div>
+                            <div class="flex gap-1.5">
+                                @if($totalRemaining > 0 && $totalRemaining <= 50)
+                                    <span class="font-body text-[10px] font-semibold uppercase bg-coral text-white rounded-pill px-2.5 py-1">Sisa {{ $totalRemaining }}</span>
+                                @endif
+                                <span class="font-body text-[10px] font-semibold uppercase bg-accent text-ink rounded-pill px-2.5 py-1">Segera</span>
+                            </div>
                         </div>
                     </div>
                 </a>
             @empty
                 <div class="col-span-full text-center py-16">
-                    <p class="font-display text-2xl font-bold text-muted mb-2">Segera Hadir</p>
+                    <p class="font-display text-2xl font-semibold text-muted mb-2">Segera Hadir</p>
                     <p class="font-body text-sm text-mid-gray">Cek kembali nanti untuk update acara terbaru.</p>
                 </div>
             @endforelse
@@ -129,7 +142,7 @@
         </span>
 
         {{-- Title --}}
-        <h2 class="font-display text-[clamp(28px,4vw,36px)] font-bold uppercase text-white leading-[1.05] mb-3">
+        <h2 class="font-display text-[clamp(28px,4vw,36px)] font-semibold uppercase text-white leading-[1.05] mb-3">
             Empat Langkah Menuju<br>Konser Impianmu.
         </h2>
 
@@ -142,13 +155,13 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-4">
             {{-- Step 01 --}}
             <div class="bg-surface-1 border border-white/10 rounded-card p-6 flex flex-col">
-                <span class="font-display text-5xl font-black text-accent/30 leading-none mb-4">01</span>
+                <span class="font-display text-5xl font-semibold text-accent/30 leading-none mb-4">01</span>
                 <div class="w-10 h-10 rounded-lg bg-accent/15 flex items-center justify-center mb-4">
                     <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
                 </div>
-                <h3 class="font-display text-lg font-bold text-white mb-2">Pilih Acara</h3>
+                <h3 class="font-display text-lg font-semibold text-white mb-2">Pilih Acara</h3>
                 <p class="font-body text-sm text-cream/60 leading-relaxed flex-1">
                     Jelajahi daftar konser yang tersedia dan temukan acara yang paling kamu tunggu.
                 </p>
@@ -156,14 +169,14 @@
 
             {{-- Step 02 --}}
             <div class="bg-surface-1 border border-white/10 rounded-card p-6 flex flex-col">
-                <span class="font-display text-5xl font-black text-accent/30 leading-none mb-4">02</span>
+                <span class="font-display text-5xl font-semibold text-accent/30 leading-none mb-4">02</span>
                 <div class="w-10 h-10 rounded-lg bg-accent/15 flex items-center justify-center mb-4">
                     <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
                 </div>
-                <h3 class="font-display text-lg font-bold text-white mb-2">Pilih Zona</h3>
+                <h3 class="font-display text-lg font-semibold text-white mb-2">Pilih Zona</h3>
                 <p class="font-body text-sm text-cream/60 leading-relaxed flex-1">
                     Lihat layout venue secara visual dan pilih zona sesuai budget dan posisi favoritmu.
                 </p>
@@ -171,13 +184,13 @@
 
             {{-- Step 03 --}}
             <div class="bg-surface-1 border border-white/10 rounded-card p-6 flex flex-col">
-                <span class="font-display text-5xl font-black text-accent/30 leading-none mb-4">03</span>
+                <span class="font-display text-5xl font-semibold text-accent/30 leading-none mb-4">03</span>
                 <div class="w-10 h-10 rounded-lg bg-accent/15 flex items-center justify-center mb-4">
                     <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                     </svg>
                 </div>
-                <h3 class="font-display text-lg font-bold text-white mb-2">Bayar</h3>
+                <h3 class="font-display text-lg font-semibold text-white mb-2">Bayar</h3>
                 <p class="font-body text-sm text-cream/60 leading-relaxed flex-1">
                     Selesaikan pembayaran dengan aman dalam waktu 15 menit sebelum kuota dilepas kembali.
                 </p>
@@ -185,13 +198,13 @@
 
             {{-- Step 04 --}}
             <div class="bg-surface-1 border border-white/10 rounded-card p-6 flex flex-col">
-                <span class="font-display text-5xl font-black text-accent/30 leading-none mb-4">04</span>
+                <span class="font-display text-5xl font-semibold text-accent/30 leading-none mb-4">04</span>
                 <div class="w-10 h-10 rounded-lg bg-accent/15 flex items-center justify-center mb-4">
                     <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h-4M4 12h3m0 0h3"/>
                     </svg>
                 </div>
-                <h3 class="font-display text-lg font-bold text-white mb-2">Terima E-Tiket</h3>
+                <h3 class="font-display text-lg font-semibold text-white mb-2">Terima E-Tiket</h3>
                 <p class="font-body text-sm text-cream/60 leading-relaxed flex-1">
                     E-tiket lengkap dengan QR code otomatis terkirim ke emailmu, siap dipakai di hari-H.
                 </p>
@@ -207,7 +220,7 @@
     <div class="max-w-2xl mx-auto px-4">
         <div class="text-center mb-8">
             <span class="font-body text-[11px] font-semibold text-accent uppercase tracking-[0.12em] block mb-2">FAQ</span>
-            <h2 class="font-display text-4xl font-black uppercase text-white leading-none">Pertanyaan Umum</h2>
+            <h2 class="font-display text-4xl font-semibold uppercase text-white leading-none">Pertanyaan Umum</h2>
         </div>
 
         <div class="space-y-3" x-data="{ open: null }">
@@ -221,7 +234,7 @@
             @foreach($faqs as $i => $faq)
                 <div class="bg-surface-1 border border-white/10 rounded-xl overflow-hidden">
                     <button @click="open === {{ $i }} ? open = null : open = {{ $i }}"
-                            class="w-full flex items-center justify-between p-4 text-left font-display text-base font-bold text-white hover:text-accent transition-colors">
+                            class="w-full flex items-center justify-between p-4 text-left font-display text-base font-semibold text-white hover:text-accent transition-colors">
                         {{ $faq['q'] }}
                         <span class="text-xl shrink-0 ml-4 transition-transform duration-300" :class="open === {{ $i }} ? 'rotate-45' : ''">+</span>
                     </button>
@@ -241,7 +254,7 @@
      ================================================================ --}}
 <div data-theme="light" class="bg-accent py-20 md:py-24">
     <div class="max-w-3xl mx-auto px-4 text-center">
-        <h2 class="font-display text-[clamp(32px,5vw,52px)] font-black uppercase text-ink leading-[1.05] mb-4">
+        <h2 class="font-display text-[clamp(32px,5vw,52px)] font-semibold uppercase text-ink leading-[1.05] mb-4">
             Siap Rasakan<br>Konser Impianmu?
         </h2>
         <p class="font-body text-sm text-ink/60 max-w-lg mx-auto leading-relaxed mb-8">

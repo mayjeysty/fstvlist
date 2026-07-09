@@ -16,11 +16,19 @@
    1. DESIGN TOKENS — Variabel Master
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/* ── Clash Display ── */
+@font-face { font-family: 'ClashDisplay-Extralight'; src: url('/fonts/ClashDisplay-Extralight.otf') format('opentype'); }
+@font-face { font-family: 'ClashDisplay-Light'; src: url('/fonts/ClashDisplay-Light.otf') format('opentype'); }
+@font-face { font-family: 'ClashDisplay-Regular'; src: url('/fonts/ClashDisplay-Regular.otf') format('opentype'); }
+@font-face { font-family: 'ClashDisplay-Medium'; src: url('/fonts/ClashDisplay-Medium.otf') format('opentype'); }
+@font-face { font-family: 'ClashDisplay-Semibold'; src: url('/fonts/ClashDisplay-Semibold.otf') format('opentype'); font-weight: 650; }
+@font-face { font-family: 'ClashDisplay-Bold'; src: url('/fonts/ClashDisplay-Bold.otf') format('opentype'); }
+
 :root {
   /* ── Font Stack ── */
   --font-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter",
     "Helvetica Neue", Roboto, sans-serif;
-  --font-display: var(--font-primary);
+  --font-display: 'ClashDisplay-Semibold', Fraunces, Georgia, serif;
 
   /* ── Typography Scale ── */
   --text-heading-1: 2rem;

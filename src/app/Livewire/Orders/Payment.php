@@ -7,8 +7,8 @@ use App\Models\Order;
 use App\Services\PaymentService;
 use App\Services\TicketService;
 use App\Services\QueueService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Payment extends Component
@@ -17,7 +17,10 @@ class Payment extends Component
     public string $method = 'transfer';
     public ?string $snapToken = null;
     public ?string $midtransOrderId = null;
-    public bool $showSuccessModal = false;
+    public bool $showSimulatedPanel = false;
+    public bool $showTicket = false;
+    public int $activeTicketIndex = 0;
+    public array $simulatedPayment = [];
 
     protected PaymentService $paymentService;
     protected TicketService $ticketService;
@@ -35,32 +38,38 @@ class Payment extends Component
 
     public function mount(Order $order): void
     {
+        if ($order->status === Order::STATUS_PAID) {
+            $this->order = $order->load(['event.venue', 'tickets.section']);
+            $this->showTicket = true;
+            return;
+        }
+
         abort_if($order->status !== Order::STATUS_WAITING_PAYMENT, 404);
         abort_if($order->user_id !== auth()->id(), 403);
         $this->order = $order->load(['event.venue', 'section']);
     }
 
-    /**
-     * Generate Snap token and open Midtrans popup via JS.
-     * If Midtrans keys not configured, process as simulated payment.
-     */
+    public function switchToTicket(int $index): void
+    {
+        $this->activeTicketIndex = $index;
+    }
+
     public function initiatePayment(): void
     {
-        $this->validate(['method' => 'required|in:transfer,virtual_account,qris']);
+        $this->validate(['method' => 'required|in:transfer,e-wallet,qris,virtual_account']);
 
         try {
             $result = $this->paymentService->createTransaction($this->order, $this->method);
             $this->midtransOrderId = $result['order_id'];
 
             if (! empty($result['simulated'])) {
-                $this->processSuccess();
+                $this->showSimulatedPayment();
                 return;
             }
 
             $this->snapToken = $result['snap_token'];
             $token = $this->snapToken;
 
-            // Direct JS injection — bypasses Alpine event timing issues
             $this->js(<<<JS
                 window.snap.pay('{$token}', {
                     onSuccess: function(result) {
@@ -82,59 +91,122 @@ class Payment extends Component
         }
     }
 
-    /**
-     * Called from Snap callback or simulated flow after payment success.
-     */
+    private function showSimulatedPayment(): void
+    {
+        $banks = ['BCA', 'BNI', 'Mandiri', 'BRI'];
+        $bank = match ($this->method) {
+            'qris'       => 'QRIS',
+            'e-wallet'   => 'GoPay / OVO / DANA',
+            'virtual_account' => 'BCA Virtual Account',
+            default      => $banks[array_rand($banks)],
+        };
+
+        $vaNumber = '8129' . str_pad((string) rand(1000000000, 9999999999), 12, '0', STR_PAD_LEFT);
+
+        if (in_array($this->method, ['qris', 'e-wallet'])) {
+            $paymentCode = substr(str_replace('-', '', (string) \Illuminate\Support\Str::uuid()), 0, 12);
+        }
+
+        $this->simulatedPayment = [
+            'bank'          => $bank,
+            'bank_code'      => match ($this->method) {
+                'transfer' => '014',
+                'virtual_account' => '014',
+                'qris'     => 'QR',
+                'e-wallet' => 'EW',
+                default    => '014',
+            },
+            'va_number'      => $vaNumber,
+            'payment_code'   => $paymentCode ?? null,
+            'reference'      => $this->midtransOrderId,
+            'amount'         => $this->order->total_price,
+            'method'         => $this->method,
+            'is_qris'        => $this->method === 'qris',
+            'is_ewallet'     => $this->method === 'e-wallet',
+            'is_va'          => in_array($this->method, ['transfer', 'virtual_account']),
+        ];
+
+        $this->showSimulatedPanel = true;
+    }
+
+    public function confirmSimulatedPayment(): void
+    {
+        $this->processSuccess();
+        $this->showSimulatedPanel = false;
+    }
+
+    public function cancelSimulatedPayment(): void
+    {
+        $this->showSimulatedPanel = false;
+        $this->midtransOrderId = null;
+        $this->simulatedPayment = [];
+    }
+
     public function handlePaymentSuccess(string $resultJson = ''): void
     {
-        if (! empty($resultJson)) {
-            $result = json_decode($resultJson, true);
-            $transactionId = $result['transaction_id'] ?? null;
-            $this->order->update(['midtrans_transaction_id' => $transactionId]);
-        }
+        try {
+            if (! empty($resultJson)) {
+                $result = json_decode($resultJson, true);
+                $transactionId = $result['transaction_id'] ?? null;
+                if ($transactionId) {
+                    $this->order->update(['midtrans_transaction_id' => $transactionId]);
+                }
+            }
 
-        $this->processSuccess();
+            $this->processSuccess();
+        } catch (\Exception $e) {
+            Log::error('Payment callback failed', [
+                'order_id' => $this->order->id,
+                'error'    => $e->getMessage(),
+            ]);
+            session()->flash('error', 'Terjadi kesalahan saat mengonfirmasi pembayaran. Silakan hubungi support.');
+        }
     }
 
-    /**
-     * Mark paid, generate tickets, send email.
-     */
-    protected function processSuccess(?string $orderId = null): void
+    public function processSuccess(): void
     {
-        $this->paymentService->markAsPaid($this->order);
+        try {
+            $this->paymentService->markAsPaid($this->order);
 
-        $this->ticketService->generate($this->order, [
-            ['section_id' => $this->order->section_id, 'qty' => $this->order->qty],
-        ]);
+            $this->ticketService->generate($this->order, [
+                ['section_id' => $this->order->section_id, 'qty' => $this->order->qty],
+            ]);
 
-        Mail::to($this->order->user->email)->queue(new EticketMail($this->order));
+            try {
+                $this->sendEticketEmail();
+            } catch (\Exception $e) {
+                Log::warning('Failed to send e-ticket email', [
+                    'order_id' => $this->order->id,
+                    'error'    => $e->getMessage(),
+                ]);
+            }
 
+            if ($this->order->event->queue_enabled) {
+                $this->queueService->complete(auth()->id(), $this->order->event_id);
+            }
+
+            $this->order->load('tickets.section');
+            $this->showTicket = true;
+        } catch (\Exception $e) {
+            Log::error('Payment processSuccess failed', [
+                'order_id' => $this->order->id,
+                'error'    => $e->getMessage(),
+            ]);
+            session()->flash('error', 'Terjadi kesalahan saat memproses pembayaran. Tim kami sedang meninjau. Silakan hubungi support.');
+        }
+    }
+
+    private function sendEticketEmail(): void
+    {
+        Mail::to($this->order->user->email)->send(new EticketMail($this->order));
         $this->order->tickets()->update(['email_sent_at' => now()]);
-
-        if ($this->order->event->queue_enabled) {
-            $this->queueService->complete(auth()->id(), $this->order->event_id);
-        }
-
-        $this->showSuccessModal = true;
     }
 
-    /**
-     * Redirect after success popup auto-dismiss.
-     */
-    public function redirectAfterPayment(): void
+    public function download()
     {
-        $this->redirect(route('tickets.show', $this->order));
+        return redirect()->route('tickets.download', $this->order);
     }
 
-    #[On('redirect-after-payment')]
-    public function handleRedirectAfterPayment(): void
-    {
-        $this->redirect(route('tickets.show', $this->order));
-    }
-
-    /**
-     * Called when Snap popup closes or payment fails.
-     */
     public function handlePaymentError(): void
     {
         session()->flash('error', 'Pembayaran dibatalkan atau gagal. Silakan coba lagi.');
@@ -142,9 +214,6 @@ class Payment extends Component
         $this->midtransOrderId = null;
     }
 
-    /**
-     * Called when payment is pending (e.g. bank transfer waiting for confirmation).
-     */
     public function handlePaymentPending(): void
     {
         session()->flash('info', 'Pembayaran menunggu konfirmasi. Silakan selesaikan pembayaran Anda.');
@@ -153,7 +222,10 @@ class Payment extends Component
 
     public function render()
     {
-        return view('livewire.orders.payment')
-            ->layout('layouts.booking', ['title' => 'Pembayaran — ' . $this->order->event->name]);
+        $isMailLog = config('mail.default') === 'log';
+
+        return view('livewire.orders.payment', [
+            'isMailLog' => $isMailLog,
+        ])->layout('layouts.booking', ['title' => 'Pembayaran — ' . $this->order->event->name]);
     }
 }

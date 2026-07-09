@@ -11,7 +11,8 @@ class VenueSection extends Model
     protected $fillable = [
         'venue_id', 'name', 'capacity', 'remaining_capacity',
         'sold_count', 'price', 'description', 'color_code',
-        'position_x', 'position_y',
+        'position_x', 'position_y', 'path_koordinat',
+        'label_x', 'label_y',
     ];
 
     protected $casts = [

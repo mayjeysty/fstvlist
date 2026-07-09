@@ -24,7 +24,21 @@
          (b) Adaptive color    — IntersectionObserver reads [data-theme]
          (c) Glassmorphism     — backdrop-blur + semi-transparent bg on scroll
          --}}
-    @php $isHome = request()->routeIs('home'); @endphp
+    @php
+        $isHome = request()->routeIs('home');
+        $isLoginPage = request()->routeIs('login');
+    @endphp
+
+    @if($isLoginPage)
+    {{-- Minimal header for Login / Register pages --}}
+    <div class="flex items-center justify-between px-5 py-3 bg-ink pl-8">
+        <a href="{{ route('home') }}" class="font-display text-xl font-semibold no-underline text-white flex items-baseline gap-[0.12rem] shrink-0">
+            FSTV<span class="inline-block w-[5px] h-[5px] align-middle mb-[1px] bg-accent"></span>LIST
+        </a>
+        <a href="{{ url('/') }}" class="font-body text-sm text-white/60 no-underline hover:text-accent transition-colors">&larr; Kembali ke Beranda</a>
+    </div>
+    @endif
+    @unless($isLoginPage)
     <nav id="mainNavbar"
          x-data="{
              mobileOpen: false,
@@ -57,9 +71,12 @@
              lastY = y
          "
          :class="{
-             'backdrop-blur-xl':    isScrolled,   /* (c) blur on scroll */
-             'bg-black/30':         isScrolled,   /* (c) glass bg  */
-         }"
+              'backdrop-blur-xl':         isScrolled,
+              'bg-black/30':              isScrolled && activeTheme === 'dark',
+              'bg-white/80':              isScrolled && activeTheme === 'light',
+              'bg-transparent':           !isScrolled && activeTheme === 'dark',
+              'bg-cream':                 !isScrolled && activeTheme === 'light',
+          }"
          :style="isHidden ? 'transform:translateY(-100%)' : 'transform:translateY(0)'"
          class="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-6 md:px-10 h-16 transition-all duration-500"
          style="border:none;outline:none;box-shadow:none;">
@@ -67,7 +84,7 @@
         {{-- Logo — warna menurut activeTheme --}}
         <a href="{{ route('home') }}"
            :class="activeTheme === 'dark' ? 'text-white' : 'text-ink'"
-           class="font-display text-xl font-black no-underline flex items-baseline gap-[0.12rem] shrink-0 transition-colors duration-500">
+           class="font-display text-xl font-semibold no-underline flex items-baseline gap-[0.12rem] shrink-0 transition-colors duration-500">
             FSTV<span class="inline-block w-[5px] h-[5px] align-middle mb-[1px] bg-accent"></span>LIST
         </a>
 
@@ -98,7 +115,7 @@
                         <button @click="profileOpen = !profileOpen"
                                 :class="activeTheme === 'dark' ? 'text-white' : 'text-ink'"
                                 class="flex items-center gap-2 cursor-pointer font-body text-xs font-semibold tracking-[0.06em] uppercase transition-colors duration-500">
-                            <div class="w-7 h-7 flex items-center justify-center font-display text-sm font-black"
+                            <div class="w-7 h-7 flex items-center justify-center font-display text-sm font-semibold"
                                  :class="activeTheme === 'dark' ? 'bg-accent text-ink' : 'bg-ink text-cream'">
                                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                             </div>
@@ -107,7 +124,7 @@
                         </button>
                         <div x-show="profileOpen" @click.away="profileOpen = false" x-transition
                              class="absolute right-0 mt-3 w-48 bg-white border border-border-light py-2 z-50">
-                            <a href="{{ route('tickets.index') }}" class="block px-4 py-2 text-xs text-ink hover:bg-cream transition font-body uppercase tracking-[0.06em]">Tiket Saya</a>
+                            <a href="{{ route('orders.index') }}" class="block px-4 py-2 text-xs text-ink hover:bg-cream transition font-body uppercase tracking-[0.06em]">Pesanan Saya</a>
                             <a href="{{ route('orders.index') }}" class="block px-4 py-2 text-xs text-ink hover:bg-cream transition font-body uppercase tracking-[0.06em]">Pesanan</a>
                             <hr class="border-border-light my-1">
                             <form method="POST" action="{{ route('logout') }}">
@@ -122,7 +139,11 @@
                            ? 'border-accent text-accent hover:bg-accent hover:text-ink'
                            : 'border-ink text-ink hover:bg-ink hover:text-cream'"
                        class="font-body text-xs font-semibold tracking-[0.06em] uppercase no-underline rounded-pill px-5 py-2 border transition-colors duration-500">
-                        Login
+                        Masuk
+                    </a>
+                    <a href="{{ route('login', ['tab' => 'register']) }}"
+                       class="font-body text-xs font-semibold tracking-[0.06em] uppercase no-underline rounded-pill px-5 py-2 bg-accent text-ink transition-colors duration-500 hover:bg-accent-hover">
+                        Daftar
                     </a>
                 @endauth
 
@@ -144,7 +165,7 @@
                 <a href="#contact" class="block text-sm font-semibold text-ink py-1 uppercase tracking-[0.06em]">Kontak</a>
                 <hr class="border-border-light">
                 @auth
-                    <a href="{{ route('tickets.index') }}" class="block text-sm text-ink py-1 uppercase tracking-[0.06em]">Tiket Saya</a>
+                    <a href="{{ route('orders.index') }}" class="block text-sm text-ink py-1 uppercase tracking-[0.06em]">Pesanan Saya</a>
                     <a href="{{ route('orders.index') }}" class="block text-sm text-ink py-1 uppercase tracking-[0.06em]">Pesanan</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
@@ -156,6 +177,7 @@
             </div>
         </div>
     </nav>
+    @endunless
 
     {{-- FLASH MESSAGES --}}
     <div class="fixed top-[76px] right-1.5 md:right-6 z-[200] flex flex-col gap-2 max-w-none md:max-w-[360px] left-4 md:left-auto font-body" id="flashContainer">
@@ -190,11 +212,12 @@
     </div>
 
     {{-- MAIN CONTENT: pt-16 di-skip untuk home agar hero menutupi area di belakang navbar --}}
-    <main class="{{ $isHome ? '' : 'pt-16' }} min-h-screen">
+    <main class="{{ $isHome || $isLoginPage ? '' : 'pt-16' }} min-h-screen">
         {{ $slot ?? '' }}
         @yield('content')
     </main>
 
+    @unless($isLoginPage)
     {{-- TICKER TAPE --}}
     <div class="bg-ink text-cream py-2 overflow-hidden whitespace-nowrap font-body text-xs font-semibold tracking-[0.2em] uppercase">
         <div class="inline-flex gap-16 animate-ticker">
@@ -212,7 +235,7 @@
     <footer id="contact" class="bg-ink text-cream py-16 px-6 md:px-10 font-body">
         <div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-10 md:gap-16">
             <div>
-                <div class="font-display text-4xl md:text-5xl font-black italic text-cream leading-none mb-4">FSTVLIST</div>
+                <div class="font-display text-4xl md:text-5xl font-semibold italic text-cream leading-none mb-4">FSTVLIST</div>
                 <p class="text-xs text-cream/40 leading-relaxed max-w-[280px] uppercase tracking-[0.06em]">
                     Your go-to platform for discovering and booking the best live events, concerts, and festivals.
                 </p>
@@ -222,8 +245,7 @@
                 <ul class="list-none flex flex-col gap-2.5">
                     <li><a href="{{ route('events.index') }}" class="text-cream/60 no-underline text-xs transition-colors hover:text-accent uppercase tracking-[0.08em]">Acara</a></li>
                     @auth
-                    <li><a href="{{ route('tickets.index') }}" class="text-cream/60 no-underline text-xs transition-colors hover:text-accent uppercase tracking-[0.08em]">Tiket Saya</a></li>
-                    <li><a href="{{ route('orders.index') }}" class="text-cream/60 no-underline text-xs transition-colors hover:text-accent uppercase tracking-[0.08em]">Pesanan</a></li>
+                    <li><a href="{{ route('orders.index') }}" class="text-cream/60 no-underline text-xs transition-colors hover:text-accent uppercase tracking-[0.08em]">Pesanan Saya</a></li>
                     @endauth
                 </ul>
             </div>
@@ -241,6 +263,7 @@
             <span>Made with passion for live music</span>
         </div>
     </footer>
+    @endunless
 
     @livewireScripts
 

@@ -17,14 +17,13 @@
     {{-- ─── TOP NAVBAR (hitam) ─── --}}
     <nav style="background:#000000;color:#FFFFFF;display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--space-6);position:sticky;top:0;z-index:100;">
         <a href="{{ route('home') }}" style="display:flex;align-items:baseline;gap:2px;text-decoration:none;">
-            <span style="font-family:'Fraunces',Georgia,serif;font-size:1.25rem;font-weight:900;color:#FFFFFF;">FSTV</span>
+            <span style="font-family:'ClashDisplay-Semibold','Fraunces',Georgia,serif;font-size:1.25rem;font-weight:650;color:#FFFFFF;">FSTV</span>
             <span style="display:inline-block;width:5px;height:5px;background:#E8FF00;margin-left:1px;vertical-align:middle;"></span>
-            <span style="font-family:'Fraunces',Georgia,serif;font-size:1.25rem;font-weight:900;color:#FFFFFF;">LIST</span>
+            <span style="font-family:'ClashDisplay-Semibold','Fraunces',Georgia,serif;font-size:1.25rem;font-weight:650;color:#FFFFFF;">LIST</span>
         </a>
         <div style="display:flex;align-items:center;gap:var(--space-6);">
             <a href="{{ route('events.index') }}" style="font-size:var(--text-xs);font-weight:600;color:rgba(255,255,255,0.6);text-decoration:none;text-transform:uppercase;letter-spacing:0.06em;transition:color var(--transition-fast);" onmouseover="this.style.color='#E8FF00'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Acara</a>
-            <a href="{{ route('tickets.index') }}" style="font-size:var(--text-xs);font-weight:600;color:rgba(255,255,255,0.6);text-decoration:none;text-transform:uppercase;letter-spacing:0.06em;transition:color var(--transition-fast);" onmouseover="this.style.color='#E8FF00'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Tiket Saya</a>
-            <a href="{{ route('orders.index') }}" style="font-size:var(--text-xs);font-weight:600;color:rgba(255,255,255,0.6);text-decoration:none;text-transform:uppercase;letter-spacing:0.06em;transition:color var(--transition-fast);" onmouseover="this.style.color='#E8FF00'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Pesanan</a>
+            <a href="{{ route('orders.index') }}" style="font-size:var(--text-xs);font-weight:600;color:rgba(255,255,255,0.6);text-decoration:none;text-transform:uppercase;letter-spacing:0.06em;transition:color var(--transition-fast);" onmouseover="this.style.color='#E8FF00'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Pesanan Saya</a>
             <div style="display:flex;align-items:center;gap:var(--space-2);">
                 <span style="width:24px;height:24px;border-radius:50%;background:#E8FF00;color:#000;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
                 <span style="font-size:var(--text-xs);color:rgba(255,255,255,0.5);">{{ auth()->user()->name }}</span>

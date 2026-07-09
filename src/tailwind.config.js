@@ -12,8 +12,9 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                display: ["'Fraunces'", "Georgia", "serif"],
+                display: ["'ClashDisplay-Semibold'", "'Fraunces'", "Georgia", "serif"],
                 body: ["'Inter'", ...defaultTheme.fontFamily.sans],
+                clash: ["'ClashDisplay-Bold'", "'Fraunces'", "Georgia", "serif"],
             },
             colors: {
                 ink: '#000000',

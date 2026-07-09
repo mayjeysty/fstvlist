@@ -47,6 +47,23 @@ class VenueSectionResource extends Resource
                     ]),
                 ])
                 ->columnSpanFull(),
+            Forms\Components\Textarea::make('path_koordinat')
+                ->rows(3)->columnSpanFull()
+                ->helperText('SVG path data (d attribute) dalam sistem viewBox 700x520. Biarkan kosong untuk bentuk default.'),
+            Forms\Components\Fieldset::make('Label Position')
+                ->schema([
+                    Forms\Components\Grid::make(2)->schema([
+                        Forms\Components\TextInput::make('label_x')
+                            ->numeric()->minValue(0)->maxValue(700)
+                            ->default(null)->label('Label X (0-700)')
+                            ->helperText('Posisi horizontal teks label dalam viewBox SVG. Biarkan kosong untuk auto.'),
+                        Forms\Components\TextInput::make('label_y')
+                            ->numeric()->minValue(0)->maxValue(520)
+                            ->default(null)->label('Label Y (0-520)')
+                            ->helperText('Posisi vertikal teks label dalam viewBox SVG. Biarkan kosong untuk auto.'),
+                    ]),
+                ])
+                ->columnSpanFull(),
             Forms\Components\Textarea::make('description')
                 ->rows(2)->columnSpanFull(),
         ])->columns(2);

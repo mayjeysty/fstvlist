@@ -25,17 +25,25 @@ class Show extends Component
         abort_if(! $event->queue_enabled, 404);
         $this->event = $event;
 
-        $user = auth()->user();
+        try {
+            $user = auth()->user();
 
-        // Join queue
-        $this->queueEntry = $this->queueService->join($user->id, $event->id);
-        $this->queueToken = $this->queueEntry->queue_token;
+            $this->queueEntry = $this->queueService->join($user->id, $event->id);
+            $this->queueToken = $this->queueEntry->queue_token;
 
-        session(['queue_token_' . $event->id => $this->queueToken]);
+            session(['queue_token_' . $event->id => $this->queueToken]);
 
-        // Auto-redirect if already active
-        if ($this->queueEntry->isActive()) {
-            $this->redirect(route('orders.create', $event));
+            if ($this->queueEntry->isActive()) {
+                $this->redirect(route('orders.create', $event));
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Queue join failed', [
+                'event_id' => $event->id,
+                'user_id'  => auth()->id(),
+                'error'    => $e->getMessage(),
+            ]);
+            session()->flash('error', 'Gagal bergabung ke antrian. Silakan coba lagi.');
+            $this->redirect(route('events.show', $event));
         }
     }
 

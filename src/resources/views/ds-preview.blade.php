@@ -18,7 +18,7 @@
     <!-- ═══════════ HEADER ═══════════ -->
     <header class="ds-bg-secondary ds-border-b ds-sticky ds-z-50" style="position:sticky;top:0;z-index:50;padding:var(--space-4) var(--space-6);display:flex;align-items:center;justify-content:space-between;">
         <div style="display:flex;align-items:center;gap:var(--space-3);">
-            <span style="font-family:'Fraunces',serif;font-size:1.5rem;font-weight:900;">FSTV<span style="display:inline-block;width:6px;height:6px;background:var(--color-brand);margin-left:2px;vertical-align:middle;"></span>LIST</span>
+            <span style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-size:1.5rem;font-weight:650;">FSTV<span style="display:inline-block;width:6px;height:6px;background:var(--color-brand);margin-left:2px;vertical-align:middle;"></span>LIST</span>
             <span class="ds-badge ds-badge--brand">DESIGN SYSTEM v1</span>
         </div>
         <div style="display:flex;align-items:center;gap:var(--space-4);">
@@ -87,7 +87,7 @@
 
             <!-- ═══════════ SECTION: BUTTONS ═══════════ -->
             <section id="ds-buttons" style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'Fraunces',serif;font-weight:900;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">🎛 Tombol (Button)</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">🎛 Tombol (Button)</h2>
                 <p class="ds-text-small ds-text-secondary" style="margin-bottom:var(--space-6);">Semua varian tombol dengan state hover, active, disabled, dan fokus.</p>
 
                 <!-- Variants -->
@@ -152,7 +152,7 @@
 
             <!-- ═══════════ SECTION: STEPPER ═══════════ -->
             <section id="ds-stepper" style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'Fraunces',serif;font-weight:900;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">Stepper / Breadcrumb Checkout</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">Stepper / Breadcrumb Checkout</h2>
                 <p class="ds-text-small ds-text-secondary" style="margin-bottom:var(--space-6);">Lingkaran bernomor terhubung garis progress — klik langkah selesai untuk kembali.</p>
 
                 <!-- Static Demo: All States -->
@@ -335,7 +335,7 @@
 
             <!-- ═══════════ SECTION: BADGES ═══════════ -->
             <section id="ds-badges" style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'Fraunces',serif;font-weight:900;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">🏷 Badge Status</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">🏷 Badge Status</h2>
                 <p class="ds-text-small ds-text-secondary" style="margin-bottom:var(--space-6);">Label kecil untuk menandai status, tipe tiket, atau kategori.</p>
 
                 <div class="ds-card-summary ds-card-summary--elevated">
@@ -370,7 +370,7 @@
 
             <!-- ═══════════ SECTION: FORM ═══════════ -->
             <section id="ds-form" style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'Fraunces',serif;font-weight:900;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">📝 Form Data Diri</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">📝 Form Data Diri</h2>
                 <p class="ds-text-small ds-text-secondary" style="margin-bottom:var(--space-6);">Form dengan label, input, radio group, checkbox, states validasi, dan input group.</p>
 
                 <div class="ds-card-summary ds-card-summary--elevated" style="margin-bottom:var(--space-4);">
@@ -449,7 +449,7 @@
 
             <!-- ═══════════ SECTION: CARD RINGKASAN ═══════════ -->
             <section id="ds-card" style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'Fraunces',serif;font-weight:900;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">📋 Card Ringkasan Pesanan</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">📋 Card Ringkasan Pesanan</h2>
                 <p class="ds-text-small ds-text-secondary" style="margin-bottom:var(--space-6);">Menampilkan ringkasan zona, tiket, subtotal, biaya, dan total.</p>
 
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);">
@@ -503,7 +503,7 @@
 
             <!-- ═══════════ SECTION: SUCCESS PAGE ═══════════ -->
             <section id="ds-success" style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'Fraunces',serif;font-weight:900;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">✅ Halaman Sukses</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">✅ Halaman Sukses</h2>
                 <p class="ds-text-small ds-text-secondary" style="margin-bottom:var(--space-6);">Tampilan setelah pembayaran berhasil — ikon animasi, pesan, dan detail pesanan.</p>
 
                 <div class="ds-card-summary ds-card-summary--elevated">
@@ -545,7 +545,7 @@
 
             <!-- ═══════════ SECTION: PROGRESS BAR ═══════════ -->
             <section style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'Fraunces',serif;font-weight:900;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">📊 Progress Bar</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">📊 Progress Bar</h2>
                 <div class="ds-card-summary ds-card-summary--elevated" style="display:flex;flex-direction:column;gap:var(--space-4);">
                     <div>
                         <div style="display:flex;justify-content:space-between;font-size:var(--text-xs);margin-bottom:var(--space-1);">
@@ -576,7 +576,7 @@
 
             <!-- ═══════════ SECTION: EMPTY STATE ═══════════ -->
             <section style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'Fraunces',serif;font-weight:900;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">📭 Empty State</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">📭 Empty State</h2>
                 <div class="ds-card-summary ds-card-summary--elevated">
                     <div class="ds-empty-state">
                         <svg class="ds-empty-state__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">

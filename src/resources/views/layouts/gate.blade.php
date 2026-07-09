@@ -20,7 +20,7 @@
     {{-- GATE NAVBAR --}}
     <nav class="flex items-center justify-between px-8 h-16 border-b border-cream/10 sticky top-0 bg-ink z-50">
         <a href="{{ route('events.index') }}"
-           class="font-display text-xl font-black italic text-cream no-underline">
+           class="font-display text-xl font-semibold italic text-cream no-underline">
             FSTV<span class="text-accent">●</span>LIST
         </a>
 
@@ -31,7 +31,7 @@
         <div class="flex items-center gap-4 font-body text-xs">
             @auth
                 <div class="flex items-center gap-2 text-cream/60">
-                    <div class="w-7 h-7 bg-accent text-ink flex items-center justify-center font-display text-sm italic font-black">
+                    <div class="w-7 h-7 bg-accent text-ink flex items-center justify-center font-display text-sm italic font-semibold">
                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                     </div>
                     <span class="uppercase tracking-[0.1em] text-xs">{{ auth()->user()->name }}</span>

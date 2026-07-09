@@ -1,5 +1,5 @@
 <div>
-    <h1 class="text-xl font-bold mb-6">Tiket Saya</h1>
+    <h1 class="font-display text-xl font-semibold mb-6">Tiket Saya</h1>
 
     <div class="space-y-4">
         @forelse($tickets as $order)

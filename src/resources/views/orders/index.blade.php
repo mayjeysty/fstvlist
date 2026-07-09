@@ -2,7 +2,7 @@
 @section('title', 'Pesanan Saya')
 
 @section('content')
-<h1 class="text-xl font-bold mb-6">Pesanan Saya</h1>
+<h1 class="font-display text-xl font-semibold mb-6">Pesanan Saya</h1>
 
 @forelse($orders as $order)
     @php

@@ -91,7 +91,7 @@ class PaymentService
     /**
      * Check if Midtrans keys are placeholder (use simulated payment).
      */
-    protected function isSimulated(): bool
+    public function isSimulated(): bool
     {
         $serverKey = config('midtrans.server_key');
 
@@ -101,7 +101,7 @@ class PaymentService
     /**
      * Simulate payment (always succeeds, for development).
      */
-    protected function simulateTransaction(Order $order, string $method): array
+    public function simulateTransaction(Order $order, string $method): array
     {
         $orderId = config('ticketing.midtrans_order_prefix') . $order->id . '-' . time();
 

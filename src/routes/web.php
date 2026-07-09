@@ -45,6 +45,7 @@ Route::post('/payment/midtrans/notification', [\App\Http\Controllers\MidtransWeb
 // ─── Public: Events (Livewire full-page components) ──────────────────────────
 Route::get('/events',              \App\Livewire\Events\Index::class)->name('events.index');
 Route::get('/events/{event}',      \App\Livewire\Events\Show::class)->name('events.show');
+Route::get('/events/{event}/zones',\App\Livewire\Events\Zones::class)->name('events.zones');
 
 // ─── Customer (harus login + role customer) ───────────────────────────────────
 Route::middleware(['auth', 'customer', 'throttle:booking'])->group(function () {
