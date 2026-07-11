@@ -18,26 +18,22 @@ class PaymentService
         Config::$is3ds        = config('midtrans.is_3ds');
     }
 
-    /**
-     * Create Midtrans Snap transaction and return snap token.
-     * Falls back to simulation if Midtrans keys are not configured.
-     */
-    public function createTransaction(Order $order, string $method): array
+    public function createTransaction(Order $order): array
     {
-        if ($order->status !== Order::STATUS_WAITING_PAYMENT) {
-            throw new Exception('Order tidak dalam status menunggu pembayaran.');
+        if ($order->status !== Order::STATUS_PENDING) {
+            throw new Exception('Order tidak dalam status pending.');
         }
 
         if ($order->payment_deadline && now()->isAfter($order->payment_deadline)) {
+            $order->update(['status' => Order::STATUS_EXPIRED]);
             throw new Exception('Waktu pembayaran telah habis.');
         }
 
-        // Fallback to simulation if Midtrans keys not configured
         if ($this->isSimulated()) {
-            return $this->simulateTransaction($order, $method);
+            return $this->simulateTransaction($order);
         }
 
-        $orderId = config('ticketing.midtrans_order_prefix') . $order->id . '-' . time();
+        $orderId     = config('ticketing.midtrans_order_prefix') . $order->id . '-' . time();
         $grossAmount = (int) $order->total_price;
 
         $params = [
@@ -52,7 +48,7 @@ class PaymentService
             'item_details' => [
                 [
                     'id'       => 'TICKET-' . $order->section_id,
-                    'price'    => (int) ($order->subtotal / $order->qty),
+                    'price'    => (int) ($order->subtotal / max($order->qty, 1)),
                     'quantity' => $order->qty,
                     'name'     => 'Tiket ' . ($order->section?->name ?? 'Event') . ' — ' . $order->event->name,
                 ],
@@ -70,8 +66,8 @@ class PaymentService
 
             $order->update([
                 'midtrans_order_id' => $orderId,
-                'payment_channel'   => $method,
                 'snap_token'        => $snapToken,
+                'gross_amount'      => $grossAmount,
             ]);
 
             return [
@@ -82,68 +78,33 @@ class PaymentService
         } catch (Exception $e) {
             Log::error('Midtrans Snap Error: ' . $e->getMessage(), [
                 'order_id' => $order->id,
-                'method'   => $method,
             ]);
             throw new Exception('Gagal membuat transaksi pembayaran. Silakan coba lagi.');
         }
     }
 
-    /**
-     * Check if Midtrans keys are placeholder (use simulated payment).
-     */
-    public function isSimulated(): bool
+    public function verifyWebhookSignature(array $payload): bool
     {
-        $serverKey = config('midtrans.server_key');
+        $serverKey    = config('midtrans.server_key');
+        $orderId      = $payload['order_id'] ?? '';
+        $statusCode   = $payload['status_code'] ?? '';
+        $grossAmount  = $payload['gross_amount'] ?? '';
+        $signatureKey = $payload['signature_key'] ?? '';
 
-        return empty($serverKey) || str_contains($serverKey, 'xxxx');
+        $computed = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
+
+        return hash_equals($signatureKey, $computed);
     }
 
-    /**
-     * Simulate payment (always succeeds, for development).
-     */
-    public function simulateTransaction(Order $order, string $method): array
+    public function handleNotification(array $payload): ?Order
     {
-        $orderId = config('ticketing.midtrans_order_prefix') . $order->id . '-' . time();
-
-        $order->update([
-            'midtrans_order_id' => $orderId,
-            'payment_channel'   => $method,
-            'payment_type'      => $method,
-        ]);
-
-        return [
-            'snap_token' => null,
-            'order_id'   => $orderId,
-            'simulated'  => true,
-        ];
-    }
-
-    /**
-     * Pay an order that is in waiting_payment status.
-     * Validates the order status and payment deadline, then marks as paid.
-     */
-    public function pay(Order $order, string $method): void
-    {
-        if ($order->status !== Order::STATUS_WAITING_PAYMENT) {
-            throw new Exception('Order tidak dalam status menunggu pembayaran');
-        }
-
-        if ($order->payment_deadline && now()->isAfter($order->payment_deadline)) {
-            throw new Exception('Waktu pembayaran telah habis');
-        }
-
-        $this->markAsPaid($order);
-    }
-
-    /**
-     * Handle Midtrans payment notification (webhook).
-     */
-    public function handleNotification(array $payload): void
-    {
-        $transactionStatus = $payload['transaction_status'] ?? null;
-        $orderId           = $payload['order_id'] ?? null;
         $transactionId     = $payload['transaction_id'] ?? null;
+        $orderId           = $payload['order_id'] ?? null;
+        $transactionStatus = $payload['transaction_status'] ?? null;
         $fraudStatus       = $payload['fraud_status'] ?? null;
+        $paymentType       = $payload['payment_type'] ?? null;
+        $grossAmount       = $payload['gross_amount'] ?? null;
+        $settlementTime    = $payload['settlement_time'] ?? null;
 
         Log::info('Midtrans Notification', compact('transactionStatus', 'orderId', 'transactionId'));
 
@@ -151,54 +112,83 @@ class PaymentService
 
         if (! $order) {
             Log::warning('Order not found for Midtrans notification', ['order_id' => $orderId]);
-            return;
+            return null;
         }
 
-        // Already paid — skip
         if ($order->status === Order::STATUS_PAID) {
-            return;
+            Log::info('Order already paid, skipping', ['order_id' => $order->id]);
+            return null;
         }
 
-        $order->update(['midtrans_transaction_id' => $transactionId]);
+        $order->update([
+            'midtrans_transaction_id' => $transactionId,
+            'transaction_status'      => $transactionStatus,
+            'payment_type'            => $paymentType,
+            'gross_amount'            => $grossAmount,
+            'settlement_time'         => $settlementTime ? now()->parse($settlementTime) : null,
+            'fraud_status'            => $fraudStatus,
+        ]);
 
-        if ($transactionStatus === 'capture' || $transactionStatus === 'settlement') {
-            if ($fraudStatus === 'accept') {
-                $this->markAsPaid($order);
+        if (in_array($transactionStatus, ['capture', 'settlement'])) {
+            if ($fraudStatus === 'accept' || $fraudStatus === null) {
+                return $this->markAsPaid($order);
             }
-        } elseif ($transactionStatus === 'pending') {
-            // Still waiting
         } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire', 'failure'])) {
             $this->markAsFailed($order);
         }
+
+        return null;
     }
 
-    /**
-     * Mark order as paid and generate tickets.
-     */
-    public function markAsPaid(Order $order): void
+    public function markAsPaid(Order $order): ?Order
     {
         if ($order->status === Order::STATUS_PAID) {
-            return;
+            return null;
         }
 
         $order->update([
             'status'  => Order::STATUS_PAID,
             'paid_at' => now(),
         ]);
+
+        return $order->fresh();
     }
 
-    /**
-     * Mark order as failed/expired.
-     */
     public function markAsFailed(Order $order): void
     {
-        if ($order->status !== Order::STATUS_WAITING_PAYMENT) {
+        if ($order->status === Order::STATUS_PAID) {
             return;
         }
 
-        $order->update(['status' => Order::STATUS_EXPIRED]);
+        $order->update([
+            'status'     => Order::STATUS_EXPIRED,
+            'expired_at' => now(),
+        ]);
 
-        // Rollback quota
         app(OrderService::class)->rollbackQuota($order);
+    }
+
+    public function isSimulated(): bool
+    {
+        $serverKey = config('midtrans.server_key');
+
+        return empty($serverKey) || str_contains($serverKey, 'xxxx');
+    }
+
+    private function simulateTransaction(Order $order): array
+    {
+        $orderId = config('ticketing.midtrans_order_prefix') . $order->id . '-' . time();
+        $grossAmount = (int) $order->total_price;
+
+        $order->update([
+            'midtrans_order_id' => $orderId,
+            'gross_amount'      => $grossAmount,
+        ]);
+
+        return [
+            'snap_token' => null,
+            'order_id'   => $orderId,
+            'simulated'  => true,
+        ];
     }
 }

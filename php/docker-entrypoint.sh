@@ -11,33 +11,25 @@ else
   echo "✅ Laravel project already exists. Skipping create-project."
 fi
 
-# Step 2: If .env file doesn't exist, create and add necessary environment variables
-# Check if the .env file exists
+# Step 2: Create .env ONLY if it doesn't exist (never overwrite existing)
 if [ ! -f /var/www/html/.env ]; then
-  echo "📄 Creating .env file with environment variables..."
-
-  # Create .env file with the required values
+  echo "📄 Creating .env file with default environment variables..."
   cat <<EOF > /var/www/html/.env
 APP_NAME="${PROJECT_NAME}"
-APP_ENV=local
-APP_KEY=base64:jU6xg8sp9ia37ypFlTVk1CAFx6MmeXRukO1W987uUzI=
-APP_DEBUG=true
+APP_ENV=production
+APP_KEY=
+APP_DEBUG=false
 APP_TIMEZONE='Asia/Jakarta'
 APP_URL="https://${PROJECT_NAME}.test"
 ASSET_URL="https://${PROJECT_NAME}.test"
 DEBUGBAR_ENABLED=false
 ASSET_PREFIX=
-# ASSET_PREFIX=/dev/kit/public example in case deployed inside a folder
 
 APP_LOCALE=en
 APP_FALLBACK_LOCALE=en
 APP_FAKER_LOCALE=en_US
 
-APP_MAINTENANCE_DRIVER=file
-# APP_MAINTENANCE_STORE=database
-
 PHP_CLI_SERVER_WORKERS=4
-
 BCRYPT_ROUNDS=12
 
 LOG_CHANNEL=stack
@@ -63,23 +55,33 @@ FILESYSTEM_DISK=local
 QUEUE_CONNECTION=database
 
 CACHE_STORE=database
-# CACHE_PREFIX=
 
 MEMCACHED_HOST=127.0.0.1
 
 REDIS_CLIENT=phpredis
-REDIS_HOST=127.0.0.1
+REDIS_HOST=redis
 REDIS_PASSWORD=null
 REDIS_PORT=6379
 
-MAIL_MAILER=log
+MAIL_MAILER=smtp
 MAIL_SCHEME=null
-MAIL_HOST=127.0.0.1
-MAIL_PORT=2525
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
 MAIL_USERNAME=null
 MAIL_PASSWORD=null
 MAIL_FROM_ADDRESS="hello@example.com"
-MAIL_FROM_NAME="${APP_NAME}"
+MAIL_FROM_NAME="\${APP_NAME}"
+
+MIDTRANS_SERVER_KEY=
+MIDTRANS_CLIENT_KEY=
+MIDTRANS_MERCHANT_ID=
+MIDTRANS_IS_PRODUCTION=false
+MIDTRANS_IS_SANITIZED=true
+MIDTRANS_IS_3DS=true
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URI="\${APP_URL}/auth/google/callback"
 
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
@@ -87,87 +89,15 @@ AWS_DEFAULT_REGION=us-east-1
 AWS_BUCKET=
 AWS_USE_PATH_STYLE_ENDPOINT=false
 
-VITE_APP_NAME="${APP_NAME}"
+VITE_APP_NAME="\${APP_NAME}"
 EOF
+
+  echo "📄 .env file created. Edit and restart container to apply your credentials."
 else
-  echo "📄 .env file already exists, overwriting with predefined environment variables..."
-
-  # Overwrite the existing .env file with the required values
-  cat <<EOF > /var/www/html/.env
-APP_NAME="${PROJECT_NAME}"
-APP_ENV=local
-APP_KEY=base64:jU6xg8sp9ia37ypFlTVk1CAFx6MmeXRukO1W987uUzI=
-APP_DEBUG=true
-APP_TIMEZONE='Asia/Jakarta'
-APP_URL="https://${PROJECT_NAME}.test"
-ASSET_URL="https://${PROJECT_NAME}.test"
-DEBUGBAR_ENABLED=false
-ASSET_PREFIX=
-# ASSET_PREFIX=/dev/kit/public example in case deployed inside a folder
-
-APP_LOCALE=en
-APP_FALLBACK_LOCALE=en
-APP_FAKER_LOCALE=en_US
-
-APP_MAINTENANCE_DRIVER=file
-# APP_MAINTENANCE_STORE=database
-
-PHP_CLI_SERVER_WORKERS=4
-
-BCRYPT_ROUNDS=12
-
-LOG_CHANNEL=stack
-LOG_STACK=single
-LOG_DEPRECATIONS_CHANNEL=null
-LOG_LEVEL=debug
-
-DB_CONNECTION=mariadb
-DB_HOST=db
-DB_PORT=3306
-DB_DATABASE="${PROJECT_NAME}"
-DB_USERNAME=root
-DB_PASSWORD=p455w0rd
-
-SESSION_DRIVER=database
-SESSION_LIFETIME=120
-SESSION_ENCRYPT=true
-SESSION_PATH=/
-SESSION_DOMAIN=null
-
-BROADCAST_CONNECTION=log
-FILESYSTEM_DISK=local
-QUEUE_CONNECTION=database
-
-CACHE_STORE=database
-# CACHE_PREFIX=
-
-MEMCACHED_HOST=127.0.0.1
-
-REDIS_CLIENT=phpredis
-REDIS_HOST=127.0.0.1
-REDIS_PASSWORD=null
-REDIS_PORT=6379
-
-MAIL_MAILER=log
-MAIL_SCHEME=null
-MAIL_HOST=127.0.0.1
-MAIL_PORT=2525
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_FROM_ADDRESS="hello@example.com"
-MAIL_FROM_NAME="${APP_NAME}"
-
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_DEFAULT_REGION=us-east-1
-AWS_BUCKET=
-AWS_USE_PATH_STYLE_ENDPOINT=false
-
-VITE_APP_NAME="${APP_NAME}"
-EOF
+  echo "📄 .env file already exists — preserving your settings."
 fi
 
-# Step 3: Wait for DB connection (host should match DB_HOST in .env)
+# Step 3: Wait for DB connection
 DB_HOST=$(grep DB_HOST /var/www/html/.env | cut -d '=' -f2)
 DB_PORT=$(grep DB_PORT /var/www/html/.env | cut -d '=' -f2)
 
@@ -176,7 +106,6 @@ DB_PORT=${DB_PORT:-3306}
 
 echo "⏳ Waiting for database at $DB_HOST:$DB_PORT..."
 
-# Timeout after 30 attempts (1 minute)
 RETRIES=30
 until nc -z "$DB_HOST" "$DB_PORT"; do
   if [ "$RETRIES" -le 0 ]; then
@@ -197,7 +126,7 @@ if [ ! -d /var/www/html/vendor ]; then
 fi
 
 # Step 5: Generate app key if not already present
-if [ ! -f /var/www/html/storage/oauth-private.key ]; then
+if ! grep -q "APP_KEY=base64:" /var/www/html/.env || grep -q "APP_KEY=$" /var/www/html/.env; then
   echo "🔐 Generating Laravel app key..."
   php artisan key:generate --force
 fi
@@ -205,6 +134,8 @@ fi
 # Step 6: Create necessary folders and set permissions
 echo "🔧 Fixing permissions..."
 mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache
+mkdir -p /var/www/html/storage/app/public/qr
+mkdir -p /var/www/html/storage/app/public/pdfs
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
@@ -220,11 +151,15 @@ php artisan project:init || true
 echo "🔗 Creating storage link..."
 php artisan storage:link || true
 
-# Step 10: Start cron
+# Step 10: Clear & cache config
+echo "🧹 Clearing Laravel cache..."
+php artisan optimize:clear
+
+# Step 11: Start cron
 echo "🕒 Starting cron service..."
 service cron start
 
-# Step 11: Export development variables from .env to shell
+# Step 12: Export development variables from .env to shell
 ENV_FILE="/var/www/html/.env"
 for VAR in XDEBUG PHP_IDE_CONFIG REMOTE_HOST; do
   if [ -z "${!VAR}" ] && [ -f "$ENV_FILE" ]; then
@@ -237,7 +172,7 @@ for VAR in XDEBUG PHP_IDE_CONFIG REMOTE_HOST; do
 done
 . ~/.bashrc
 
-# Step 12: Set REMOTE_HOST default if still not defined
+# Step 13: Set REMOTE_HOST default if still not defined
 if [ -z "$REMOTE_HOST" ]; then
   REMOTE_HOST="host.docker.internal"
   sed -i "/REMOTE_HOST/d" ~/.bashrc
@@ -245,7 +180,7 @@ if [ -z "$REMOTE_HOST" ]; then
   . ~/.bashrc
 fi
 
-# Step 13: Toggle Xdebug support
+# Step 14: Toggle Xdebug support
 XDEBUG_CONFIG="/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"
 
 if [ "$XDEBUG" == "true" ] && [ ! -f "$XDEBUG_CONFIG" ]; then
@@ -268,5 +203,13 @@ elif [ -f "$XDEBUG_CONFIG" ]; then
 fi
 
 echo "✅ Laravel container setup complete. Ready to serve!"
+echo ""
+APP_URL=$(grep APP_URL /var/www/html/.env | cut -d '=' -f2 | tr -d '"')
+echo "  🌐 App URL:   $APP_URL"
+echo "  🔒 SSL cert:  /etc/nginx/ssl/live/"
+echo ""
+echo "  For production SSL (Let's Encrypt):"
+echo "    bash setup-ssl-prod.sh your-domain.com"
+echo ""
 
 exec "$@"

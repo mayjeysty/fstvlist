@@ -15,7 +15,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     use HasFactory, HasRoles, Notifiable;
 
-    protected $fillable = ['avatar_url', 'name', 'email', 'password'];
+    protected $fillable = ['avatar_url', 'name', 'email', 'password', 'google_id'];
 
     protected $hidden = ['password', 'remember_token'];
 

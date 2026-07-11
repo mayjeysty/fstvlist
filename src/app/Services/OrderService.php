@@ -5,12 +5,13 @@ namespace App\Services;
 use App\Models\EventSection;
 use App\Models\Order;
 use App\Models\VenueSection;
+use App\Services\PaymentService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
-    public function reserve(int $userId, int $eventId, int $sectionId, int $qty): Order
+    public function create(int $userId, int $eventId, int $sectionId, int $qty): Order
     {
         if ($qty < 1 || $qty > 4) {
             throw new Exception('Jumlah tiket harus antara 1 dan 4.');
@@ -27,7 +28,7 @@ class OrderService
                     throw new Exception('Kuota tidak mencukupi.');
                 }
                 $eventSection->decrement('remaining_quota', $qty);
-                $price    = $eventSection->price;
+                $price = $eventSection->price;
             } else {
                 $section = VenueSection::lockForUpdate()->findOrFail($sectionId);
                 if ($section->remaining_capacity < $qty) {
@@ -45,13 +46,18 @@ class OrderService
                 'event_id'         => $eventId,
                 'section_id'       => $sectionId,
                 'qty'              => $qty,
-                'status'           => Order::STATUS_RESERVED,
-                'booking_deadline' => now()->addMinutes(15),
+                'status'           => Order::STATUS_PENDING,
+                'payment_deadline' => now()->addMinutes(15),
                 'subtotal'         => $subtotal,
                 'service_fee'      => $serviceFee,
                 'total_price'      => $subtotal + $serviceFee,
             ]);
         });
+    }
+
+    public function proceedToPayment(Order $order): void
+    {
+        app(PaymentService::class)->createTransaction($order);
     }
 
     public function rollbackQuota(Order $order): void
@@ -77,13 +83,5 @@ class OrderService
 
             $order->update(['status' => Order::STATUS_EXPIRED, 'expired_at' => now()]);
         });
-    }
-
-    public function proceedToPayment(Order $order): void
-    {
-        $order->update([
-            'status'           => Order::STATUS_WAITING_PAYMENT,
-            'payment_deadline' => now()->addMinutes(15),
-        ]);
     }
 }

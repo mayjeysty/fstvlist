@@ -22,4 +22,11 @@ return [
     'ticket_prefix' => env('TICKETING_TICKET_PREFIX', 'TKT-'),
 
     'midtrans_order_prefix' => env('TICKETING_MIDTRANS_ORDER_PREFIX', 'ORDER-'),
+
+    'ticket_number_prefix' => env('TICKETING_TICKET_NUMBER_PREFIX', 'TKT'),
+    'ticket_number_padding' => 6,
+
+    'qr_size' => 300,
+    'qr_format' => 'png',
+    'qr_error_correction' => 'H',
 ];

@@ -27,7 +27,7 @@ class Checkout extends Component
 
     public function mount(Order $order): void
     {
-        abort_if($order->status !== Order::STATUS_RESERVED, 404);
+        abort_if($order->status !== Order::STATUS_PENDING, 404);
         abort_if($order->user_id !== auth()->id(), 403);
         $this->order = $order->load(['event.venue', 'section', 'user']);
 

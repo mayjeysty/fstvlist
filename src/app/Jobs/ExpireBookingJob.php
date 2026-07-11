@@ -16,8 +16,8 @@ class ExpireBookingJob implements ShouldQueue
 
     public function handle(OrderService $orderService): void
     {
-        Order::where('status', Order::STATUS_RESERVED)
-            ->where('booking_deadline', '<', now())
+        Order::where('status', Order::STATUS_PENDING)
+            ->where('payment_deadline', '<', now())
             ->with('tickets')
             ->get()
             ->each(function (Order $order) use ($orderService) {

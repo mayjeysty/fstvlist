@@ -3,7 +3,6 @@
 namespace App\Livewire\Orders;
 
 use App\Models\Event;
-use App\Models\EventSection;
 use App\Services\OrderService;
 use App\Services\QueueService;
 use Livewire\Component;
@@ -135,7 +134,7 @@ class Create extends Component
         }
 
         try {
-            $order = $this->orderService->reserve(
+            $order = $this->orderService->create(
                 auth()->id(), $this->event->id, $this->sectionId, $this->qty
             );
         } catch (\Exception $e) {
@@ -159,4 +158,3 @@ class Create extends Component
         ])->layout('layouts.booking', ['title' => 'Pilih Tiket — ' . $this->event->name]);
     }
 }
-

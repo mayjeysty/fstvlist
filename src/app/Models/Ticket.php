@@ -10,8 +10,8 @@ class Ticket extends Model
     protected $fillable = [
         'order_id', 'event_id', 'section_id',
         'user_name', 'user_email',
-        'ticket_code', 'qr_token', 'email_sent_at',
-        'checked_in_at', 'checked_in_by',
+        'ticket_code', 'ticket_number', 'qr_token', 'qr_path', 'pdf_path',
+        'email_sent_at', 'checked_in_at', 'checked_in_by',
     ];
 
     protected $casts = [

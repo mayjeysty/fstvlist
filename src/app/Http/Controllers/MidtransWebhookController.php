@@ -2,78 +2,52 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\EticketMail;
-use App\Models\Order;
+use App\Actions\ProcessPaymentSuccess;
+use App\Events\OrderPaid;
 use App\Services\PaymentService;
-use App\Services\TicketService;
-use App\Services\QueueService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class MidtransWebhookController extends Controller
 {
-    protected PaymentService $paymentService;
-    protected TicketService $ticketService;
-    protected QueueService $queueService;
-
     public function __construct(
-        PaymentService $paymentService,
-        TicketService $ticketService,
-        QueueService $queueService
-    ) {
-        $this->paymentService = $paymentService;
-        $this->ticketService  = $ticketService;
-        $this->queueService   = $queueService;
-    }
+        protected PaymentService $paymentService,
+        protected ProcessPaymentSuccess $processPaymentSuccess,
+    ) {}
 
-    /**
-     * Handle Midtrans payment notification webhook.
-     */
     public function handle(Request $request): string
     {
         $payload = $request->all();
 
-        Log::info('Midtrans Webhook received', $payload);
+        Log::info('Midtrans Webhook received', [
+            'order_id'          => $payload['order_id'] ?? null,
+            'transaction_status'=> $payload['transaction_status'] ?? null,
+        ]);
 
-        $orderId       = $payload['order_id'] ?? null;
-        $transactionId = $payload['transaction_id'] ?? null;
-        $status        = $payload['transaction_status'] ?? null;
-        $fraudStatus   = $payload['fraud_status'] ?? null;
+        if (! $this->paymentService->verifyWebhookSignature($payload)) {
+            Log::warning('Midtrans webhook: invalid signature', [
+                'order_id' => $payload['order_id'] ?? null,
+            ]);
+            return 'OK';
+        }
 
-        $order = Order::with(['event', 'user'])->where('midtrans_order_id', $orderId)->first();
+        $orderId = $payload['order_id'] ?? null;
+        $order   = \App\Models\Order::where('midtrans_order_id', $orderId)->first();
 
         if (! $order) {
             Log::warning('Midtrans webhook: order not found', ['order_id' => $orderId]);
             return 'OK';
         }
 
-        if ($order->status === Order::STATUS_PAID) {
+        if ($order->status === \App\Models\Order::STATUS_PAID) {
+            Log::info('Midtrans webhook: order already paid', ['order_id' => $order->id]);
             return 'OK';
         }
 
-        $order->update(['midtrans_transaction_id' => $transactionId]);
+        $paidOrder = $this->paymentService->handleNotification($payload);
 
-        if (in_array($status, ['capture', 'settlement'])) {
-            if ($fraudStatus === 'accept' || $fraudStatus === null) {
-                $this->paymentService->markAsPaid($order);
-
-                // Generate tickets
-                $this->ticketService->generate($order, [
-                    ['section_id' => $order->section_id, 'qty' => $order->qty],
-                ]);
-
-                // Send e-ticket email
-                Mail::to($order->user->email)->queue(new EticketMail($order));
-                $order->tickets()->update(['email_sent_at' => now()]);
-
-                // Complete queue if applicable
-                if ($order->event->queue_enabled) {
-                    $this->queueService->complete($order->user_id, $order->event_id);
-                }
-            }
-        } elseif (in_array($status, ['cancel', 'deny', 'expire', 'failure'])) {
-            $this->paymentService->markAsFailed($order);
+        if ($paidOrder) {
+            OrderPaid::dispatch($paidOrder);
         }
 
         return 'OK';

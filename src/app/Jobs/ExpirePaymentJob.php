@@ -16,7 +16,7 @@ class ExpirePaymentJob implements ShouldQueue
 
     public function handle(OrderService $orderService): void
     {
-        Order::where('status', Order::STATUS_WAITING_PAYMENT)
+        Order::where('status', Order::STATUS_PENDING)
             ->where('payment_deadline', '<', now())
             ->with('tickets')
             ->get()
