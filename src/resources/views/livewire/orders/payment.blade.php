@@ -20,12 +20,24 @@
         </span>
         <span class="ds-stepper__connector {{ $showTicket ? 'ds-stepper__connector--completed' : '' }}"></span>
         <span class="ds-stepper__step {{ $showTicket ? 'ds-stepper__step--completed' : 'ds-stepper__step--active' }}">
-            <span class="ds-stepper__circle">{{ $showTicket ? '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' : '3' }}</span>
+            <span class="ds-stepper__circle">
+                @if($showTicket)
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                @else
+                    3
+                @endif
+            </span>
             <span class="ds-stepper__label">Pembayaran</span>
         </span>
         <span class="ds-stepper__connector {{ $showTicket ? 'ds-stepper__connector--completed' : '' }}"></span>
         <span class="ds-stepper__step {{ $showTicket ? 'ds-stepper__step--completed' : 'ds-stepper__step--inactive' }}">
-            <span class="ds-stepper__circle">{{ $showTicket ? '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' : '4' }}</span>
+            <span class="ds-stepper__circle">
+                @if($showTicket)
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                @else
+                    4
+                @endif
+            </span>
             <span class="ds-stepper__label">Selesai</span>
         </span>
     </div>

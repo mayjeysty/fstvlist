@@ -469,8 +469,8 @@
   font-size: var(--text-xs);
   user-select: none;
   padding: var(--space-1) 0;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 /* ── Step Item: horizontal (circle kiri, label kanan) ── */
@@ -480,8 +480,8 @@
   gap: var(--stepper-gap);
   text-decoration: none;
   cursor: default;
-  flex-shrink: 0;
-  white-space: nowrap;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 /* ── Circle ── */
@@ -515,13 +515,16 @@
   font-weight: var(--font-weight-regular);
   transition: all var(--transition-base);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 /* ── Connector Line ── */
 .ds-stepper__connector {
   width: 40px;
-  min-width: 24px;
-  flex-shrink: 0;
+  min-width: 12px;
+  flex-shrink: 1;
   height: var(--stepper-line-thickness);
   background-color: var(--stepper-line-color);
   transition: background-color var(--transition-base);
@@ -606,9 +609,19 @@
 /* ═══ RESPONSIVE ═══ */
 
 @media (max-width: 767px) {
+  .ds-stepper {
+    overflow-x: hidden;
+  }
+
+  .ds-stepper__step {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+
   .ds-stepper__circle {
     width: var(--stepper-circle-size-mobile);
     height: var(--stepper-circle-size-mobile);
+    flex-shrink: 0;
   }
 
   .ds-stepper__circle svg {
@@ -617,12 +630,17 @@
   }
 
   .ds-stepper__connector {
-    width: 28px;
-    min-width: 18px;
+    width: 24px;
+    min-width: 8px;
+    flex-shrink: 1;
+    margin: 0 2px;
   }
 
   .ds-stepper__label {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 }
 
