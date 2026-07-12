@@ -225,10 +225,10 @@
                         <span class="font-body text-[12px] text-muted">atau</span>
                         <span class="flex-1 h-px bg-border-light"></span>
                     </div>
-                    <button type="button" class="w-full bg-white border border-solid border-ink/20 rounded-pill py-3.5 flex items-center justify-center gap-3 font-body text-[14px] font-semibold text-ink hover:bg-cream transition-all duration-200 min-h-[48px]">
+                    <a href="{{ route('auth.google.redirect') }}" class="w-full bg-white border border-solid border-ink/20 rounded-pill py-3.5 flex items-center justify-center gap-3 font-body text-[14px] font-semibold text-ink hover:bg-cream transition-all duration-200 min-h-[48px]">
                         <span class="w-4 h-4 rounded-full bg-gradient-to-br from-accent to-coral"></span>
                         Lanjutkan dengan Google
-                    </button>
+                    </a>
                 </form>
             </div>
 

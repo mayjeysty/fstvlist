@@ -17,6 +17,9 @@ Route::get('/design-system', function () {
     return view('ds-preview');
 })->name('design-system');
 
+// ─── Diagnostic ───────────────────────────────────────────────────────────────
+Route::get('/diagnostic/google', [\App\Http\Controllers\DiagnosticController::class, 'google'])->name('diagnostic.google');
+
 // ─── Home ────────────────────────────────────────────────────────────────────
 Route::get('/', function () {
     $featuredEvents = \App\Models\Event::where('is_active', true)

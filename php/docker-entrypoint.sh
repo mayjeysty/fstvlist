@@ -13,29 +13,19 @@ fi
 
 # Step 2: Create .env ONLY if it doesn't exist (never overwrite existing)
 if [ ! -f /var/www/html/.env ]; then
-  echo "📄 Creating .env file with default environment variables..."
-  cat <<EOF > /var/www/html/.env
+  if [ -f /var/www/html/.env.production ]; then
+    echo "📄 Creating .env from .env.production template..."
+    cp /var/www/html/.env.production /var/www/html/.env
+  else
+    echo "📄 Creating .env from built-in defaults..."
+    cat <<EOF > /var/www/html/.env
 APP_NAME="${PROJECT_NAME}"
 APP_ENV=production
 APP_KEY=
 APP_DEBUG=false
 APP_TIMEZONE='Asia/Jakarta'
-APP_URL="https://${PROJECT_NAME}.test"
-ASSET_URL="https://${PROJECT_NAME}.test"
-DEBUGBAR_ENABLED=false
-ASSET_PREFIX=
-
-APP_LOCALE=en
-APP_FALLBACK_LOCALE=en
-APP_FAKER_LOCALE=en_US
-
-PHP_CLI_SERVER_WORKERS=4
-BCRYPT_ROUNDS=12
-
-LOG_CHANNEL=stack
-LOG_STACK=single
-LOG_DEPRECATIONS_CHANNEL=null
-LOG_LEVEL=debug
+APP_URL="https://\${PROJECT_NAME}.test"
+ASSET_URL="https://\${PROJECT_NAME}.test"
 
 DB_CONNECTION=mariadb
 DB_HOST=db
@@ -50,34 +40,21 @@ SESSION_ENCRYPT=true
 SESSION_PATH=/
 SESSION_DOMAIN=null
 
-BROADCAST_CONNECTION=log
-FILESYSTEM_DISK=local
 QUEUE_CONNECTION=database
-
 CACHE_STORE=database
-
-MEMCACHED_HOST=127.0.0.1
-
-REDIS_CLIENT=phpredis
 REDIS_HOST=redis
-REDIS_PASSWORD=null
 REDIS_PORT=6379
 
 MAIL_MAILER=smtp
-MAIL_SCHEME=null
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_USERNAME=
+MAIL_PASSWORD=
 MAIL_FROM_NAME="\${APP_NAME}"
 
 MIDTRANS_SERVER_KEY=
 MIDTRANS_CLIENT_KEY=
-MIDTRANS_MERCHANT_ID=
 MIDTRANS_IS_PRODUCTION=false
-MIDTRANS_IS_SANITIZED=true
-MIDTRANS_IS_3DS=true
 
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
@@ -85,16 +62,12 @@ GOOGLE_REDIRECT_URI="\${APP_URL}/auth/google/callback"
 
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
-AWS_DEFAULT_REGION=us-east-1
-AWS_BUCKET=
-AWS_USE_PATH_STYLE_ENDPOINT=false
-
 VITE_APP_NAME="\${APP_NAME}"
 EOF
-
-  echo "📄 .env file created. Edit and restart container to apply your credentials."
+  fi
+  echo "📄 .env created. Add your credentials then restart: docker compose restart"
 else
-  echo "📄 .env file already exists — preserving your settings."
+  echo "📄 .env found — preserving your settings."
 fi
 
 # Step 3: Wait for DB connection
