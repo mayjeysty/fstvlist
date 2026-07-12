@@ -154,8 +154,8 @@
                         <span class="font-body text-[12px] text-muted">atau</span>
                         <span class="flex-1 h-px bg-border-light"></span>
                     </div>
-                    <a href="{{ route('auth.google.redirect') }}" class="w-full bg-white border border-solid border-ink/20 rounded-pill py-3.5 flex items-center justify-center gap-3 font-body text-[14px] font-semibold text-ink hover:bg-cream transition-all duration-200 min-h-[48px]">
-                        <span class="w-4 h-4 rounded-full bg-gradient-to-br from-accent to-coral"></span>
+                    <a href="{{ route('auth.google.redirect') }}" class="no-underline" style="display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:10px 16px;background:#fff;border:1px solid #dadce0;border-radius:4px;font-family:Roboto,Arial,sans-serif;font-size:14px;font-weight:500;color:#3c4043;letter-spacing:0.25px;text-decoration:none;min-height:48px;" onmouseover="this.style.background='#f8f9fa';this.style.boxShadow='0 1px 3px rgba(60,64,67,.08)';" onmouseout="this.style.background='#fff';this.style.boxShadow='none';">
+                        <img src="/icons/google.svg" alt="Google" width="18" height="18" style="flex-shrink:0;">
                         Lanjutkan dengan Google
                     </a>
                 </form>
@@ -226,13 +226,12 @@
                         <span class="font-body text-[12px] text-muted">atau</span>
                         <span class="flex-1 h-px bg-border-light"></span>
                     </div>
-                    <a href="{{ route('auth.google.redirect') }}" class="w-full bg-white border border-solid border-ink/20 rounded-pill py-3.5 flex items-center justify-center gap-3 font-body text-[14px] font-semibold text-ink hover:bg-cream transition-all duration-200 min-h-[48px]">
-                        <span class="w-4 h-4 rounded-full bg-gradient-to-br from-accent to-coral"></span>
+                    <a href="{{ route('auth.google.redirect') }}" class="no-underline" style="display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:10px 16px;background:#fff;border:1px solid #dadce0;border-radius:4px;font-family:Roboto,Arial,sans-serif;font-size:14px;font-weight:500;color:#3c4043;letter-spacing:0.25px;text-decoration:none;min-height:48px;" onmouseover="this.style.background='#f8f9fa';this.style.boxShadow='0 1px 3px rgba(60,64,67,.08)';" onmouseout="this.style.background='#fff';this.style.boxShadow='none';">
+                        <img src="/icons/google.svg" alt="Google" width="18" height="18" style="flex-shrink:0;">
                         Lanjutkan dengan Google
                     </a>
                 </form>
             </div>
-
         </div>
     </div>
 </div>

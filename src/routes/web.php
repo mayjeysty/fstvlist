@@ -19,6 +19,7 @@ Route::get('/design-system', function () {
 
 // ─── Diagnostic ───────────────────────────────────────────────────────────────
 Route::get('/diagnostic/google', [\App\Http\Controllers\DiagnosticController::class, 'google'])->name('diagnostic.google');
+Route::get('/test-google', fn () => view('test-google'))->name('test.google');
 
 // ─── Home ────────────────────────────────────────────────────────────────────
 Route::get('/', function () {
