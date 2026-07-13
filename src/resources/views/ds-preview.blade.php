@@ -22,7 +22,7 @@
             <span class="ds-badge ds-badge--brand">DESIGN SYSTEM v1</span>
         </div>
         <div style="display:flex;align-items:center;gap:var(--space-4);">
-            <span class="ds-text-small ds-text-secondary">🌗 Toggle Dark Mode</span>
+            <span class="ds-text-small ds-text-secondary">Toggle Dark Mode</span>
             <button @click="toggleDark()" style="position:relative;width:48px;height:26px;border-radius:var(--radius-pill);background:var(--color-bg-tertiary);border:1px solid var(--color-border);cursor:pointer;transition:all var(--transition-fast);" :style="dark ? 'background:var(--color-brand);border-color:var(--color-brand)' : ''">
                 <span style="position:absolute;top:2px;width:20px;height:20px;border-radius:50%;background:var(--color-text-primary);transition:transform var(--transition-fast);" :style="dark ? 'transform:translateX(22px);background:var(--color-brand-text)' : 'left:2px'"></span>
             </button>
@@ -87,7 +87,7 @@
 
             <!-- ═══════════ SECTION: BUTTONS ═══════════ -->
             <section id="ds-buttons" style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">🎛 Tombol (Button)</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;"><circle cx="5" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/></svg>Tombol (Button)</h2>
                 <p class="ds-text-small ds-text-secondary" style="margin-bottom:var(--space-6);">Semua varian tombol dengan state hover, active, disabled, dan fokus.</p>
 
                 <!-- Variants -->
@@ -99,7 +99,7 @@
                         <button class="ds-btn ds-btn--accent">Accent / CTA</button>
                         <button class="ds-btn ds-btn--danger">Danger</button>
                         <button class="ds-btn ds-btn--ghost">Ghost</button>
-                        <button class="ds-btn ds-btn--upgrade">⭐ Upgrade</button>
+                        <button class="ds-btn ds-btn--upgrade"><img src="/icons/star.svg" alt="" width="14" height="14" style="vertical-align:middle;margin-right:4px;"> Upgrade</button>
                     </div>
                 </div>
 
@@ -145,7 +145,7 @@
                 <!-- Block (full width) -->
                 <div class="ds-card-summary ds-card-summary--elevated">
                     <p class="ds-card-summary__title">Tombol Full-Width</p>
-                    <button class="ds-btn ds-btn--accent ds-btn--lg ds-btn--block ds-mb-2">🚀 Bayar Sekarang — IDR 2.500.000</button>
+                    <button class="ds-btn ds-btn--accent ds-btn--lg ds-btn--block ds-mb-2">Bayar Sekarang — IDR 2.500.000</button>
                     <button class="ds-btn ds-btn--secondary ds-btn--block">Kembali ke Halaman Utama</button>
                 </div>
             </section>
@@ -236,7 +236,7 @@
                     </div>
                 </div>
 
-                <!-- 🧪 Interactive Demo -->
+                <!-- Interactive Demo -->
                 <div class="ds-card-summary ds-card-summary--elevated" style="margin-bottom:var(--space-4);">
                     <p class="ds-card-summary__title ds-mb-3">Interactive Demo — Klik langkah selesai / Lanjut-Mundur</p>
 
@@ -335,20 +335,20 @@
 
             <!-- ═══════════ SECTION: BADGES ═══════════ -->
             <section id="ds-badges" style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">🏷 Badge Status</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Badge Status</h2>
                 <p class="ds-text-small ds-text-secondary" style="margin-bottom:var(--space-6);">Label kecil untuk menandai status, tipe tiket, atau kategori.</p>
 
                 <div class="ds-card-summary ds-card-summary--elevated">
                     <div style="display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:center;margin-bottom:var(--space-4);">
                         <span class="ds-badge ds-badge--primary">Primary</span>
-                        <span class="ds-badge ds-badge--success">✓ Paid</span>
-                        <span class="ds-badge ds-badge--error">✕ Cancelled</span>
-                        <span class="ds-badge ds-badge--warning">⚠ Pending</span>
-                        <span class="ds-badge ds-badge--info">ℹ Info</span>
+                        <span class="ds-badge ds-badge--success"><img src="/icons/check.svg" alt="" width="12" height="12" style="vertical-align:middle;margin-right:2px;"> Paid</span>
+                        <span class="ds-badge ds-badge--error"><img src="/icons/x.svg" alt="" width="12" height="12" style="vertical-align:middle;margin-right:2px;"> Cancelled</span>
+                        <span class="ds-badge ds-badge--warning"><img src="/icons/warning.svg" alt="" width="12" height="12" style="vertical-align:middle;margin-right:2px;"> Pending</span>
+                        <span class="ds-badge ds-badge--info"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> Info</span>
                         <span class="ds-badge ds-badge--brand">BRAND</span>
                         <span class="ds-badge ds-badge--neutral">Neutral</span>
-                        <span class="ds-badge ds-badge--vip">★ VIP</span>
-                        <span class="ds-badge ds-badge--premium">👑 PREMIUM</span>
+                        <span class="ds-badge ds-badge--vip"><img src="/icons/star.svg" alt="" width="12" height="12" style="vertical-align:middle;margin-right:2px;"> VIP</span>
+                        <span class="ds-badge ds-badge--premium"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:2px;"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg> PREMIUM</span>
                         <span class="ds-badge ds-badge--free">FREE</span>
                     </div>
                     <div style="display:flex;gap:var(--space-4);align-items:center;">
@@ -370,7 +370,7 @@
 
             <!-- ═══════════ SECTION: FORM ═══════════ -->
             <section id="ds-form" style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">📝 Form Data Diri</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Form Data Diri</h2>
                 <p class="ds-text-small ds-text-secondary" style="margin-bottom:var(--space-6);">Form dengan label, input, radio group, checkbox, states validasi, dan input group.</p>
 
                 <div class="ds-card-summary ds-card-summary--elevated" style="margin-bottom:var(--space-4);">
@@ -440,7 +440,7 @@
                             <span class="ds-input-group__suffix">,00</span>
                         </div>
                         <div class="ds-input-group ds-input-group--error">
-                            <span class="ds-input-group__prefix">🔗</span>
+                            <span class="ds-input-group__prefix"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></span>
                             <input type="text" class="ds-input-group__input" placeholder="https://..." value="invalid-url">
                         </div>
                     </div>
@@ -449,7 +449,7 @@
 
             <!-- ═══════════ SECTION: CARD RINGKASAN ═══════════ -->
             <section id="ds-card" style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">📋 Card Ringkasan Pesanan</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>Card Ringkasan Pesanan</h2>
                 <p class="ds-text-small ds-text-secondary" style="margin-bottom:var(--space-6);">Menampilkan ringkasan zona, tiket, subtotal, biaya, dan total.</p>
 
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);">
@@ -490,11 +490,11 @@
                     <!-- Timer -->
                     <div>
                         <div class="ds-timer" style="margin-bottom:var(--space-4);">
-                            <p class="ds-timer__label">⏱ Selesaikan Dalam</p>
+                            <p class="ds-timer__label"><img src="/icons/clock.svg" alt="" width="14" height="14" style="vertical-align:middle;margin-right:4px;"> Selesaikan Dalam</p>
                             <p class="ds-timer__time">14:59</p>
                         </div>
                         <div class="ds-timer ds-timer--danger">
-                            <p class="ds-timer__label">⏱ Waktu Hampir Habis!</p>
+                            <p class="ds-timer__label"><img src="/icons/clock.svg" alt="" width="14" height="14" style="vertical-align:middle;margin-right:4px;"> Waktu Hampir Habis!</p>
                             <p class="ds-timer__time">00:42</p>
                         </div>
                     </div>
@@ -503,7 +503,7 @@
 
             <!-- ═══════════ SECTION: SUCCESS PAGE ═══════════ -->
             <section id="ds-success" style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">✅ Halaman Sukses</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Halaman Sukses</h2>
                 <p class="ds-text-small ds-text-secondary" style="margin-bottom:var(--space-6);">Tampilan setelah pembayaran berhasil — ikon animasi, pesan, dan detail pesanan.</p>
 
                 <div class="ds-card-summary ds-card-summary--elevated">
@@ -545,7 +545,7 @@
 
             <!-- ═══════════ SECTION: PROGRESS BAR ═══════════ -->
             <section style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">📊 Progress Bar</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Progress Bar</h2>
                 <div class="ds-card-summary ds-card-summary--elevated" style="display:flex;flex-direction:column;gap:var(--space-4);">
                     <div>
                         <div style="display:flex;justify-content:space-between;font-size:var(--text-xs);margin-bottom:var(--space-1);">
@@ -576,7 +576,7 @@
 
             <!-- ═══════════ SECTION: EMPTY STATE ═══════════ -->
             <section style="margin-bottom:var(--space-16);">
-                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);">📭 Empty State</h2>
+                <h2 style="font-family:'ClashDisplay-Semibold','Fraunces',serif;font-weight:650;font-size:var(--text-heading-1);margin-bottom:var(--space-2);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;"><polyline points="22 13 16 13 14 16 10 8 8 11 2 11"/></svg>Empty State</h2>
                 <div class="ds-card-summary ds-card-summary--elevated">
                     <div class="ds-empty-state">
                         <svg class="ds-empty-state__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">

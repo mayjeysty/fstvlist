@@ -52,15 +52,15 @@
                 <p class="font-body text-[16px] text-white/60 leading-[1.7] max-w-[400px] mt-6">Masuk ke akun FSTVLIST-mu, pilih konser favorit, dan dapatkan e-ticket langsung setelah pembayaran berhasil.</p>
                 <div class="flex flex-col gap-2.5 mt-5">
                     <div class="flex items-center gap-2.5">
-                        <span class="text-[16px]">&#127934;</span>
+                        <img src="/icons/shield.svg" alt="" width="18" height="18" style="flex-shrink:0;">
                         <span class="font-body text-[14px] text-white/60">Pembayaran aman</span>
                     </div>
                     <div class="flex items-center gap-2.5">
-                        <span class="text-[16px]">&#128274;</span>
+                        <img src="/icons/lock.svg" alt="" width="18" height="18" style="flex-shrink:0;">
                         <span class="font-body text-[14px] text-white/60">Data terenkripsi</span>
                     </div>
                     <div class="flex items-center gap-2.5">
-                        <span class="text-[16px]">&#128231;</span>
+                        <img src="/icons/ticket.svg" alt="" width="18" height="18" style="flex-shrink:0;">
                         <span class="font-body text-[14px] text-white/60">E-ticket otomatis</span>
                     </div>
                 </div>
@@ -69,15 +69,15 @@
                 <p class="font-body text-[16px] text-white/60 leading-[1.7] max-w-[400px] mt-6">Daftar gratis, pilih konser favoritmu, dan dapatkan e-ticket langsung setelah pembayaran berhasil.</p>
                 <div class="flex flex-col gap-2.5 mt-5">
                     <div class="flex items-center gap-2.5">
-                        <span class="text-[16px]">&#127934;</span>
+                        <img src="/icons/shield.svg" alt="" width="18" height="18" style="flex-shrink:0;">
                         <span class="font-body text-[14px] text-white/60">Pembayaran aman</span>
                     </div>
                     <div class="flex items-center gap-2.5">
-                        <span class="text-[16px]">&#128274;</span>
+                        <img src="/icons/lock.svg" alt="" width="18" height="18" style="flex-shrink:0;">
                         <span class="font-body text-[14px] text-white/60">Data terenkripsi</span>
                     </div>
                     <div class="flex items-center gap-2.5">
-                        <span class="text-[16px]">&#128231;</span>
+                        <img src="/icons/ticket.svg" alt="" width="18" height="18" style="flex-shrink:0;">
                         <span class="font-body text-[14px] text-white/60">E-ticket otomatis</span>
                     </div>
                 </div>

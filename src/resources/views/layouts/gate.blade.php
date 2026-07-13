@@ -10,6 +10,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,700&family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap" rel="stylesheet">
 
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/qr-scanner.js'])
     @livewireStyles
 
@@ -50,19 +56,19 @@
     <div class="fixed top-[76px] right-6 z-[200] flex flex-col gap-2 max-w-[360px]">
         @if(session('error'))
             <div class="py-[0.85rem] px-5 rounded-xl text-[0.82rem] font-medium flex items-start gap-[0.6rem] animate-slide-in shadow-[0_4px_20px_rgba(0,0,0,0.3)] bg-error/15 border border-error/40 text-error" data-auto-dismiss>
-                <span>✕</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 <span>{{ session('error') }}</span>
             </div>
         @endif
         @if(session('success'))
             <div class="py-[0.85rem] px-5 rounded-xl text-[0.82rem] font-medium flex items-start gap-[0.6rem] animate-slide-in shadow-[0_4px_20px_rgba(0,0,0,0.3)] bg-success/15 border border-success/40 text-success" data-auto-dismiss>
-                <span>✓</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
                 <span>{{ session('success') }}</span>
             </div>
         @endif
         @if($errors->any())
             <div class="py-[0.85rem] px-5 rounded-xl text-[0.82rem] font-medium flex items-start gap-[0.6rem] animate-slide-in shadow-[0_4px_20px_rgba(0,0,0,0.3)] bg-error/15 border border-error/40 text-error" data-auto-dismiss>
-                <span>✕</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 <div>
                     @foreach($errors->all() as $error)
                         <div>{{ $error }}</div>

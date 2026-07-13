@@ -8,6 +8,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,700&family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-body bg-ink text-ink overflow-x-hidden antialiased">
@@ -80,15 +87,15 @@
             <div class="flex flex-col gap-3 mt-5 lg:mt-6"
                  x-show="tab === 'register' || tab === 'login'" x-cloak>
                 <div class="flex items-center gap-3">
-                    <span class="text-[18px] shrink-0">&#127934;</span>
+                    <img src="/icons/shield.svg" alt="" width="20" height="20" class="shrink-0">
                     <span class="font-body text-[14px] text-white/50">Pembayaran aman</span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="text-[18px] shrink-0">&#128274;</span>
+                    <img src="/icons/lock.svg" alt="" width="20" height="20" class="shrink-0">
                     <span class="font-body text-[14px] text-white/50">Data terenkripsi</span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="text-[18px] shrink-0">&#128231;</span>
+                    <img src="/icons/ticket.svg" alt="" width="20" height="20" class="shrink-0">
                     <span class="font-body text-[14px] text-white/50">E-tiket otomatis</span>
                 </div>
             </div>

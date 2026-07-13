@@ -312,7 +312,7 @@
             @if(app(\App\Services\PaymentService::class)->isSimulated())
             <div class="ds-mt-4" style="background:rgba(232,255,0,0.08);border:1px solid rgba(232,255,0,0.4);border-radius:var(--radius-lg);padding:var(--space-4);">
                 <div class="ds-flex" style="align-items:flex-start;gap:var(--space-2);">
-                    <span style="font-size:1rem;">⚠️</span>
+                    <img src="/icons/warning.svg" alt="" width="18" height="18" style="flex-shrink:0;">
                     <div><p class="ds-uppercase ds-font-bold" style="font-size:11px;color:var(--color-brand-dark);letter-spacing:0.06em;margin-bottom:2px;">Mode Simulasi Pembayaran</p><p class="ds-text-xs ds-text-tertiary" style="line-height:1.5;">Platform ini menggunakan simulasi pembayaran — tidak terhubung ke payment gateway produksi. Klik "Bayar Sekarang" untuk mensimulasikan pembayaran berhasil.</p></div>
                 </div>
             </div>
@@ -399,7 +399,7 @@
                     </div>
                     <div class="ds-flex ds-items-center ds-justify-between ds-mb-1" style="font-size:11px;"><span class="ds-text-tertiary">Kode Bayar</span><span class="ds-font-bold ds-font-mono" style="letter-spacing:0.05em;">{{ $simulatedPayment['payment_code'] }}</span></div>
                 @else
-                    <div class="ds-flex ds-items-center ds-gap-3 ds-mb-4"><span style="font-size:1.75rem;">🏦</span><div><p class="ds-font-bold ds-text-small">{{ $simulatedPayment['bank'] }}</p><p class="ds-text-xs ds-text-tertiary">Virtual Account</p></div></div>
+                    <div class="ds-flex ds-items-center ds-gap-3 ds-mb-4"><img src="/icons/bank.svg" alt="" width="28" height="28" style="flex-shrink:0;"><div><p class="ds-font-bold ds-text-small">{{ $simulatedPayment['bank'] }}</p><p class="ds-text-xs ds-text-tertiary">Virtual Account</p></div></div>
                     <div class="ds-mb-4" style="background:var(--color-bg-primary);border-radius:var(--radius-md);padding:var(--space-3);text-align:center;">
                         <p class="ds-text-xs ds-text-tertiary ds-mb-1" style="font-size:9px;letter-spacing:0.08em;text-transform:uppercase;">Nomor Virtual Account</p>
                         <p class="ds-font-mono ds-font-bold" style="font-size:1.25rem;letter-spacing:0.06em;word-break:break-all;">{{ chunk_split($simulatedPayment['va_number'], 4, ' ') }}</p>
